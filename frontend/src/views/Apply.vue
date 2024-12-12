@@ -4,7 +4,7 @@
 </template>
 
 <script setup>
-import TaskBarMain from "../components/Client/Recruitment/TaskBarMain.vue";
+import TaskBarMain from "../components/Client/jd-page/JdHeader.vue";
 import BodyApply from "../components/Client/Apply/BodyApply.vue";
 </script>
 

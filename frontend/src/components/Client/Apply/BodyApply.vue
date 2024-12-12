@@ -1,5 +1,4 @@
 <template>
-  <!-- widget recuitment  -->
   <div class="container-fluid">
     <div class="container">
       <div class="row">
@@ -13,7 +12,7 @@
       </div>
     </div>
   </div>
-  <!-- (end) widget recuitment  -->
+
   <div class="container-fluid published-recuitment-wrapper">
     <div class="container published-recuitment-content">
       <div class="row">
@@ -87,7 +86,6 @@
                             id="jobGender"
                             v-model="gender"
                           >
-                            <option value="1">Chọn giới tính</option>
                             <option value="Nam">Nam</option>
                             <option value="Nữ">Nữ</option>
                           </select>
@@ -173,19 +171,6 @@
                               id="empYearOb"
                             >
                               <option selected="selected" value="0">Năm</option>
-                              <option value="2020">2020</option>
-                              <option value="2019">2019</option>
-                              <option value="2018">2018</option>
-                              <option value="2017">2017</option>
-                              <option value="2016">2016</option>
-                              <option value="2015">2015</option>
-                              <option value="2014">2014</option>
-                              <option value="2013">2013</option>
-                              <option value="2012">2012</option>
-                              <option value="2011">2011</option>
-                              <option value="2010">2010</option>
-                              <option value="2009">2009</option>
-                              <option value="2008">2008</option>
                               <option value="2007">2007</option>
                               <option value="2006">2006</option>
                               <option value="2005">2005</option>
@@ -256,7 +241,6 @@
                             class="form-control"
                             id="empStatus"
                           >
-                            <option value="">Chọn tình trạng hôn nhân</option>
                             <option value="Độc thân">Độc thân</option>
                             <option value="Đã kết hôn">Đã kết hôn</option>
                           </select>
@@ -306,58 +290,33 @@
               </div>
             </div>
 
-            <div class="card recuitment-card">
-              <div class="card-header recuitment-card-header" id="headingTwo">
-                <h2 class="mb-0">
-                  <a
-                    class="btn btn-link btn-block text-left collapsed recuitment-header"
-                    type="button"
-                    data-toggle="collapse"
-                    data-target="#collapseTwo"
-                    aria-expanded="false"
-                    aria-controls="collapseTwo"
+            <div
+              id="collapseTwo"
+              class="collapse show"
+              aria-labelledby="headingTwo"
+              data-parent="#accordionExample"
+            >
+              <div class="card-body recuitment-body">
+                <div class="form-group row">
+                  <label class="col-sm-3 col-form-label text-right label"
+                    >Chọn hồ sơ đính kèm<span style="color: red" class="pl-2"
+                      >*</span
+                    ></label
                   >
-                    File đính kèm
-                    <span id="clickc1_advance3" class="clicksd">
-                      <i class="fa fa fa-angle-up"></i>
-                    </span>
-                  </a>
-                </h2>
-              </div>
-              <div
-                id="collapseTwo"
-                class="collapse show"
-                aria-labelledby="headingTwo"
-                data-parent="#accordionExample"
-              >
-                <div class="card-body recuitment-body">
-                  <div class="form-group row">
-                    <label class="col-sm-3 col-form-label text-right label"
-                      >Chọn hồ sơ đính kèm<span style="color: red" class="pl-2"
-                        >*</span
-                      ></label
-                    >
-                    <div class="col-sm-9">
-                      <input
-                        type="file"
-                        id="file"
-                        class="recuitment-card-acttachment"
-                        @change="handleFileChange"
-                      />
-                      <label for="file" class="btn-1"
-                        ><i class="fa fa-paperclip pr-2"></i>Chọn file</label
-                      >
-                      <p>{{ selectFile.name }}</p>
-                      <p @click="uploadFile">Chọn file này</p>
-                      <div>
-                        <p v-for="(u, i) of uploadFiles">
-                          <a :href="u.url">{{ u.name }}</a>
-                        </p>
-                      </div>
-                      <p class="output-file">
-                        <span id="previewFileName"></span>
-                      </p>
-                    </div>
+                  <div class="col-sm-9">
+                    <input
+                      type="file"
+                      id="file"
+                      class="recuitment-card-acttachment"
+                      @change="handleFileChange"
+                      accept=".pdf,.doc,.docx"
+                    />
+                    <label for="file" class="btn-1">
+                      <i class="fa fa-paperclip pr-2"></i>Chọn file
+                    </label>
+                    <p v-if="selectedFileName" class="mt-2">
+                      File đã chọn: {{ selectedFileName }}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -415,9 +374,6 @@
                         class="form-control"
                         id="jobLevel"
                       >
-                        <option selected="selected" value="">
-                          Chọn trình độ
-                        </option>
                         <option value="Đại học">Đại học</option>
                         <option value="Cao đẳng">Cao đẳng</option>
                         <option value="Trung cấp">Trung cấp</option>
@@ -443,9 +399,6 @@
                         class="form-control"
                         id="jobExperience"
                       >
-                        <option selected="selected" value="">
-                          Chọn kinh nghiệm
-                        </option>
                         <option value="Chưa có kinh nghiệm">
                           Chưa có kinh nghiệm
                         </option>
@@ -472,9 +425,6 @@
                         class="form-control"
                         id="empLevel"
                       >
-                        <option selected="selected" value="100">
-                          Chọn cấp bậc
-                        </option>
                         <option value="Nhân viên">Nhân viên</option>
                         <option value="CTV">CTV</option>
                         <option value="Trưởng nhóm">Trưởng nhóm</option>
@@ -499,9 +449,6 @@
                         id="empWishLevel"
                         v-model="desired_position"
                       >
-                        <option selected="selected" value="100">
-                          Chọn cấp bậc
-                        </option>
                         <option value="Nhân viên">Nhân viên</option>
                         <option value="CTV">CTV</option>
                         <option value="Trưởng nhóm">Trưởng nhóm</option>
@@ -608,7 +555,6 @@
                       />
                     </div>
                   </div>
-
                   <div class="form-group row">
                     <label class="col-sm-3 col-form-label text-right label"
                       >Nơi làm việc mong muốn<span
@@ -673,7 +619,8 @@ const date_of_birth = ref("");
 const marriage = ref("");
 const province = ref("");
 const residence = ref("");
-const file = ref(null);
+// const file = ref(null);
+const fileName = ref("");
 const title = ref("");
 const qualification = ref("");
 const experience = ref("");
@@ -682,8 +629,7 @@ const desired_position = ref("");
 const desired_job = ref("");
 const salary = ref("");
 const workplace = ref("");
-const selectFile = ref("");
-const uploadFiles = ref([]);
+const selectedFileName = ref("");
 
 watch([birthDay, birthMonth, birthYear], ([newDay, newMonth, newYear]) => {
   if (newDay !== "0" && newMonth !== "0" && newYear !== "0") {
@@ -691,30 +637,102 @@ watch([birthDay, birthMonth, birthYear], ([newDay, newMonth, newYear]) => {
   }
 });
 
-const handleFileChange = (e) => {
-  if (e.target.files && e.target.files[0]) {
-    selectFile.value = e.target.files[0];
+const handleFileChange = (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    selectedFileName.value = file.name;
+    fileName.value = file.name;
   }
 };
-
-const uploadFile = () => {
-  const fileUrl = URL.createObjectURL(selectFile.value);
-  uploadFiles.value.push({
-    name: selectFile.value.name,
-    url: fileUrl,
-  });
-  console.log(uploadFiles.value);
-  selectFile.value = "";
-};
-
-// Form submission
 const submitForm = async () => {
+  // Validate required fields
+  if (!fullname.value) {
+    alert("Vui lòng nhập họ tên");
+    return;
+  }
+  if (!phone.value) {
+    alert("Vui lòng nhập số điện thoại");
+    return;
+  }
+  if (!gender.value || gender.value === "0") {
+    alert("Vui lòng chọn giới tính");
+    return;
+  }
+
+  if (
+    birthDay.value === "0" ||
+    birthMonth.value === "0" ||
+    birthYear.value === "0"
+  ) {
+    alert("Vui lòng chọn ngày sinh đầy đủ");
+    return;
+  }
+
+  if (!marriage.value) {
+    alert("Vui lòng chọn tình trạng hôn nhân");
+    return;
+  }
+
+  if (!province.value) {
+    alert("Vui lòng chọn tỉnh/thành phố");
+    return;
+  }
+
+  if (!residence.value) {
+    alert("Vui lòng nhập chỗ ở hiện tại");
+    return;
+  }
+
+  if (!fileName.value) {
+    alert("Vui lòng chọn file hồ sơ đính kèm");
+    return;
+  }
+
+  if (!title.value) {
+    alert("Vui lòng nhập tiêu đề hồ sơ");
+    return;
+  }
+
+  if (!qualification.value) {
+    alert("Vui lòng chọn trình độ cao nhất");
+    return;
+  }
+
+  if (!experience.value) {
+    alert("Vui lòng chọn số năm kinh nghiệm");
+    return;
+  }
+
+  if (!current_position.value) {
+    alert("Vui lòng chọn cấp bậc hiện tại");
+    return;
+  }
+
+  if (!desired_position.value) {
+    alert("Vui lòng chọn cấp bậc mong muốn");
+    return;
+  }
+
+  if (!desired_job.value) {
+    alert("Vui lòng chọn công việc mong muốn");
+    return;
+  }
+
+  if (!salary.value || salary.value <= 0) {
+    alert("Vui lòng nhập mức lương mong muốn hợp lệ");
+    return;
+  }
+
+  if (!workplace.value) {
+    alert("Vui lòng chọn nơi làm việc mong muốn");
+    return;
+  }
+
+  if (!phone.value || phone.value < 0) {
+    alert("Vui lòng nhập số điện thoại hợp lệ");
+    return;
+  }
   try {
-    const fileUrls = uploadFiles.value.map((file) => file.url);
-
-    const formData = new FormData();
-    formData.append("file", file.value);
-
     const applyData = {
       fullname: fullname.value,
       phone: phone.value,
@@ -723,7 +741,7 @@ const submitForm = async () => {
       marriage: marriage.value,
       province: province.value,
       residence: residence.value,
-      file: fileUrls,
+      file: fileName.value,
       title: title.value,
       qualification: qualification.value,
       experience: experience.value,
@@ -742,15 +760,35 @@ const submitForm = async () => {
       },
       body: JSON.stringify(applyData),
     });
-    console.log("aa", applyData);
+
     if (response.ok) {
-      alert("Application submitted successfully!");
+      alert("Nộp hồ sơ thành công!");
+      // Reset form
+      fullname.value = "";
+      phone.value = "";
+      gender.value = "0";
+      birthDay.value = "0";
+      birthMonth.value = "0";
+      birthYear.value = "0";
+      marriage.value = "";
+      province.value = "";
+      residence.value = "";
+      fileName.value = "";
+      selectedFileName.value = "";
+      title.value = "";
+      qualification.value = "";
+      experience.value = "";
+      current_position.value = "";
+      desired_position.value = "";
+      desired_job.value = "";
+      salary.value = "";
+      workplace.value = "";
     } else {
-      throw new Error("Failed to submit application");
+      throw new Error("Không thể nộp hồ sơ");
     }
   } catch (error) {
-    console.error("Error submitting form:", error);
-    alert("Failed to submit application");
+    console.error("Lỗi khi nộp hồ sơ:", error);
+    alert("Không thể nộp hồ sơ. Vui lòng thử lại sau.");
   }
 };
 

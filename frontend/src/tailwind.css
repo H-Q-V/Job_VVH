@@ -1,3 +1,32 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer reset, primevue;
+
+/* Reset CSS */
+@layer reset {
+  :root {
+    --primary-color: #009688;
+    --white: #ffffff;
+  }
+  @import url("https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@200;400;600&display=swap");
+  html,
+  body {
+    padding: 0;
+    margin: 0;
+    font-family: "Be Vietnam Pro", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+  }
+  a {
+    color: var(--primary-color);
+    text-decoration: none;
+  }
+  .p-toast {
+    max-width: 90vw;
+  }
+  .w-full .p-inputtext {
+    width: 100%;
+  }
+}

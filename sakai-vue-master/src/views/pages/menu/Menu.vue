@@ -210,7 +210,6 @@ const openNew = () => {
             <Button label="Save" icon="pi pi-check" @click="updateMenu" />
         </template>
     </Dialog>
-
     <ConfirmPopup></ConfirmPopup>
 </template>
 

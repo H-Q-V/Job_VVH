@@ -8,7 +8,9 @@ import {
   Post,
   Put,
   Request,
+  UploadedFile,
   UseGuards,
+  UseInterceptors,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
@@ -16,15 +18,36 @@ import { JobService } from './job.service';
 import { JobDto } from './job.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { CreatorGuard } from 'src/auth/creator.guard';
-
+import { FileInterceptor } from '@nestjs/platform-express';
+import { CloudinaryService } from '../../../common/services/cloudinary.service';
 @Controller('jobs')
 export class JobController {
-  constructor(private jobService: JobService) {}
+  constructor(
+    private jobService: JobService,
+    private readonly cloudinaryService: CloudinaryService,
+  ) {}
 
   @Post('/create')
   @UseGuards(AuthGuard(), CreatorGuard)
-  async createJob(@Body() jobDto: JobDto, @Request() req: any) {
-    const data = await this.jobService.create(jobDto, req.creator);
+  @UseInterceptors(FileInterceptor('logo'))
+  async createJob(
+    @Body() jobDto: JobDto,
+    @Request() req: any,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    let logoUrl;
+    if (file) {
+      const result = await this.cloudinaryService.uploadFile(file);
+      logoUrl = result.secure_url;
+      console.log('Upload result:', result); // Thêm log để debug
+    }
+    const data = await this.jobService.create(
+      {
+        ...jobDto,
+        logo: logoUrl,
+      },
+      req.creator,
+    );
     return {
       success: true,
       code: 200,

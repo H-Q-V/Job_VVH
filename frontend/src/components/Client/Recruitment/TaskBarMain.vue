@@ -3,7 +3,10 @@
     <div class="container cnt-tnar">
       <nav class="navbar navbar-expand-lg navbar-light tjnav-bar">
         <a href="#" class="nav-logo">
-          <img :src="imgTechJob" />
+          <!-- <img :src="imgTechJob" /> -->
+          <router-link to="/" class="nav-logo">
+            <img :src="imgTechJob" />
+          </router-link>
         </a>
         <button
           class="navbar-toggler tnavbar-toggler"
@@ -20,14 +23,6 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto my-2 my-lg-0 tnav-right tn-nav">
             <li class="nav-item nav-coin">
-              <!-- <a
-                class="nav-link btn-employers"
-                href="#"
-                tabindex="-1"
-                aria-disabled="true"
-                style="color: #fff !important"
-                >Nạp tiền</a
-              > -->
               <RouterLink
                 class="nav-link btn-employers"
                 :to="{ name: 'payment' }"
@@ -46,7 +41,7 @@
                   style="color: #ffd700"
                   aria-hidden="true"
                 ></i>
-                <span class="coins">Coins: {{ coins }}</span>
+                <span class="coins">Coins: {{ formatNumber(coins) }}</span>
               </div>
             </li>
           </ul>
@@ -94,6 +89,10 @@ const confirmLogout = () => {
   localStorage.removeItem("token");
   isLogin.value = false;
 };
+
+const formatNumber = (number) => {
+  return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
 </script>
 
 <style scoped>
@@ -103,5 +102,9 @@ const confirmLogout = () => {
 
 .nav-coin {
   margin-right: 20px;
+}
+
+.button-auth {
+  margin-top: 10px;
 }
 </style>

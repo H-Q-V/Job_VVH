@@ -17,7 +17,7 @@ export class Job {
   @Prop({ required: true })
   salary: string;
 
-  @Prop({ required: true })
+  @Prop({ required: false })
   logo: string;
 
   @Prop({ required: true, type: [String] })

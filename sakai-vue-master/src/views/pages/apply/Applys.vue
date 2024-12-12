@@ -87,23 +87,26 @@
                 </span>
             </template>
         </Column>
-        <!-- <Column field="jobRequest" header="File" :sortable="true" headerStyle="width:14%; min-width:10rem;">
-            <template #body="slotProps">
-                <span class="p-column-title">File</span>
-                <span class="truncate-text" v-tooltip.top="slotProps.data.file">
-                    {{ slotProps.data.file }}
-                </span>
-            </template>
-        </Column> -->
+
         <Column field="file" header="File" :sortable="true" headerStyle="width:14%; min-width:10rem;">
             <template #body="slotProps">
                 <span class="p-column-title">File</span>
-                <div v-if="slotProps.data.file && slotProps.data.file.length">
-                    <div v-for="(fileUrl, index) in slotProps.data.file" :key="index" class="file-download-link">
-                        <Button icon="pi pi-download" class="p-button-text" @click="downloadFile(fileUrl, `CV_${index + 1}`)" v-tooltip.top="fileUrl"> CV {{ index + 1 }} </Button>
-                    </div>
+                <div v-if="slotProps.data.file">
+                    <div class="file-name">{{ getFileName(slotProps.data.file) }}</div>
+
+                    <Button class="p-button-text p-button-sm mr-2" @click="viewFile(getFileName(slotProps.data.file))" tooltip="Xem file">
+                        <i class="pi pi-eye mr-1"></i>
+                        Xem
+                    </Button>
+
+                    <Button class="p-button-text p-button-sm" @click="downloadFile(getFileName(slotProps.data.file), `CV_${slotProps.data._id}.${getFileExtension(getFileName(slotProps.data.file))}`)" tooltip="Tải xuống">
+                        <i class="pi pi-download mr-1"></i>
+                        Tải về
+                    </Button>
                 </div>
-                <div v-else>No file available</div>
+                <div v-else>
+                    <span class="text-gray-500">Chưa có file đính kèm</span>
+                </div>
             </template>
         </Column>
 
@@ -355,6 +358,7 @@ const submitted = ref(false);
 const display = ref(false);
 const toast = useToast();
 const confirmPopup = useConfirm();
+
 const open = (editApply) => {
     apply.value = { ...editApply };
     display.value = true;
@@ -378,83 +382,6 @@ const openNew = () => {
     apply.value = {};
     submitted.value = false;
     applyDialog.value = true;
-};
-
-const downloadFile = async (fileUrl, fileName) => {
-    try {
-        // Kiểm tra URL
-        if (!fileUrl) {
-            throw new Error('Invalid file URL');
-        }
-        console.log('fileurl', fileUrl);
-        // Nếu URL đã là blob URL
-        if (fileUrl.startsWith('blob:')) {
-            const link = document.createElement('a');
-            link.href = fileUrl;
-            link.download = `${fileName}.pdf`; // Hoặc extension phù hợp
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-
-            toast.add({
-                severity: 'success',
-                summary: 'Success',
-                detail: 'File downloaded successfully',
-                life: 3000
-            });
-            return;
-        }
-
-        // Nếu là URL thông thường
-        let response;
-        try {
-            // Thử với URL gốc
-            response = await fetch(fileUrl);
-        } catch (error) {
-            // Thử với base URL của backend
-            const baseUrl = 'http://localhost:3000'; // URL của backend
-            response = await fetch(`${fileUrl}`);
-        }
-
-        if (!response.ok) {
-            throw new Error('Failed to download file');
-        }
-
-        const blob = await response.blob();
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-
-        // Lấy extension từ Content-Type hoặc từ URL
-        const contentType = response.headers.get('content-type');
-        let extension = 'pdf'; // default extension
-        if (contentType) {
-            if (contentType.includes('pdf')) extension = 'pdf';
-            else if (contentType.includes('image')) extension = contentType.split('/')[1];
-            else if (fileUrl.includes('.')) extension = fileUrl.split('.').pop().toLowerCase();
-        }
-
-        link.download = `${fileName}.${extension}`;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
-
-        toast.add({
-            severity: 'success',
-            summary: 'Success',
-            detail: 'File downloaded successfully',
-            life: 3000
-        });
-    } catch (error) {
-        console.error('Download error:', error);
-        toast.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: error.message || 'Failed to download file',
-            life: 3000
-        });
-    }
 };
 
 onMounted(async () => {
@@ -537,6 +464,23 @@ const deleteApply = async (applyId) => {
         toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to connect to server', life: 3000 });
     }
 };
+
+// Thêm vào phần script
+const getFileName = (fileString) => {
+    if (!fileString) return '';
+    // Nếu fileString là một mảng, lấy phần tử đầu tiên
+    if (Array.isArray(fileString)) {
+        return fileString[0] || '';
+    }
+    // Nếu là string, trả về nguyên bản
+    return fileString;
+};
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.file-name {
+    margin-bottom: 0.5rem;
+    color: #495057;
+    word-break: break-all;
+}
+</style>

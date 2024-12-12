@@ -17,8 +17,6 @@ import { PayosService } from './payos.service';
 import { AuthGuard } from '@nestjs/passport';
 import { CreatorGuard } from 'src/auth/creator.guard';
 import { Code } from 'mongodb';
-// import { Request } from 'express';
-// import { UsersGuard } from 'src/auth/user.guard';
 
 @Controller('payos')
 export class PayosController {

@@ -49,7 +49,11 @@
                 type="text"
                 class="form-control"
                 placeholder="Nhập tiêu đề"
+                :class="{ 'is-invalid': errors.title }"
               />
+              <div v-if="errors.title" class="invalid-feedback">
+                {{ errors.title }}
+              </div>
             </div>
           </div>
           <div class="form-group row">
@@ -61,9 +65,13 @@
                 v-model="company"
                 type="text"
                 class="form-control"
-                placeholder="Nhập yêu cầu công việc"
+                placeholder="Nhập tên công ty"
                 rows="5"
+                :class="{ 'is-invalid': errors.company }"
               ></textarea>
+              <div v-if="errors.company" class="invalid-feedback">
+                {{ errors.company }}
+              </div>
             </div>
           </div>
           <div class="form-group row">
@@ -75,9 +83,13 @@
                 v-model="location"
                 type="text"
                 class="form-control"
-                placeholder="Nhập yêu cầu công việc"
+                placeholder="Nhập địa điểm"
                 rows="5"
+                :class="{ 'is-invalid': errors.location }"
               ></textarea>
+              <div v-if="errors.location" class="invalid-feedback">
+                {{ errors.location }}
+              </div>
             </div>
           </div>
           <div class="form-group row">
@@ -89,16 +101,22 @@
                 v-model="salary"
                 type="text"
                 class="form-control"
-                placeholder="Nhập mô tả công việc"
+                placeholder="Nhập mức lương"
                 rows="5"
+                :class="{ 'is-invalid': errors.salary }"
               ></textarea>
+              <div v-if="errors.salary" class="invalid-feedback">
+                {{ errors.salary }}
+              </div>
             </div>
           </div>
 
           <div class="form-group row">
-            <label class="col-sm-3 col-form-label text-right label">Logo</label>
+            <label class="col-sm-3 col-form-label text-right label"
+              >Logo<span style="color: red" class="pl-2">*</span></label
+            >
             <div class="col-sm-9">
-              <div id="drop-area">
+              <div id="drop-area" :class="{ 'is-invalid': errors.logo }">
                 <input
                   type="file"
                   id="fileElem"
@@ -126,25 +144,32 @@
                   />
                 </div>
               </div>
+              <div v-if="errors.logo" class="invalid-feedback d-block">
+                {{ errors.logo }}
+              </div>
             </div>
           </div>
           <div class="form-group row">
             <label class="col-sm-3 col-form-label text-right label"
-              >benefits<span style="color: red" class="pl-2">*</span></label
+              >Benefits<span style="color: red" class="pl-2">*</span></label
             >
             <div class="col-sm-9">
               <textarea
                 v-model="benefits"
                 type="text"
                 class="form-control"
-                placeholder="Nhập yêu cầu công việc"
+                placeholder="Nhập quyền lợi"
                 rows="5"
+                :class="{ 'is-invalid': errors.benefits }"
               ></textarea>
+              <div v-if="errors.benefits" class="invalid-feedback">
+                {{ errors.benefits }}
+              </div>
             </div>
           </div>
           <div class="form-group row">
             <label class="col-sm-3 col-form-label text-right label"
-              >obDescription<span style="color: red" class="pl-2"
+              >Job Description<span style="color: red" class="pl-2"
                 >*</span
               ></label
             >
@@ -153,14 +178,18 @@
                 v-model="obDescription"
                 type="text"
                 class="form-control"
-                placeholder="Nhập yêu cầu công việc"
+                placeholder="Nhập mô tả công việc"
                 rows="5"
+                :class="{ 'is-invalid': errors.obDescription }"
               ></textarea>
+              <div v-if="errors.obDescription" class="invalid-feedback">
+                {{ errors.obDescription }}
+              </div>
             </div>
           </div>
           <div class="form-group row">
             <label class="col-sm-3 col-form-label text-right label"
-              >jobRequest<span style="color: red" class="pl-2">*</span></label
+              >Job Request<span style="color: red" class="pl-2">*</span></label
             >
             <div class="col-sm-9">
               <textarea
@@ -169,7 +198,11 @@
                 class="form-control"
                 placeholder="Nhập yêu cầu công việc"
                 rows="5"
+                :class="{ 'is-invalid': errors.jobRequest }"
               ></textarea>
+              <div v-if="errors.jobRequest" class="invalid-feedback">
+                {{ errors.jobRequest }}
+              </div>
             </div>
           </div>
           <div class="form-group row">
@@ -181,9 +214,13 @@
                 v-model="languages"
                 type="text"
                 class="form-control"
-                placeholder="Nhập yêu cầu công việc"
+                placeholder="Nhập ngôn ngữ lập trình"
                 rows="5"
+                :class="{ 'is-invalid': errors.languages }"
               ></textarea>
+              <div v-if="errors.languages" class="invalid-feedback">
+                {{ errors.languages }}
+              </div>
             </div>
           </div>
           <div class="rec-submit">
@@ -203,9 +240,11 @@
     </div>
   </div>
 </template>
+
 <script setup>
-import { ref } from "vue";
+import { ref, reactive } from "vue";
 import imgbanner from "@/assets/img/hna2.jpg";
+
 const uploadProgress = ref(0);
 const gallery = ref([]);
 const title = ref("");
@@ -216,19 +255,92 @@ const benefits = ref("");
 const obDescription = ref("");
 const jobRequest = ref("");
 const languages = ref("");
-// const logo = ref("");
 const logoUrl = ref("");
-
+const selectedFile = ref(null);
 const token = ref(localStorage.getItem("token"));
 const loading = ref(false);
+
+const errors = reactive({
+  title: "",
+  company: "",
+  location: "",
+  salary: "",
+  benefits: "",
+  obDescription: "",
+  jobRequest: "",
+  languages: "",
+  logo: "",
+});
+
+const clearErrors = () => {
+  Object.keys(errors).forEach((key) => {
+    errors[key] = "";
+  });
+};
+
+const validateForm = () => {
+  clearErrors();
+  let isValid = true;
+
+  if (!title.value.trim()) {
+    errors.title = "Vui lòng nhập tiêu đề";
+    isValid = false;
+  }
+
+  if (!company.value.trim()) {
+    errors.company = "Vui lòng nhập tên công ty";
+    isValid = false;
+  }
+
+  if (!location.value.trim()) {
+    errors.location = "Vui lòng nhập địa điểm";
+    isValid = false;
+  }
+
+  if (!salary.value.trim()) {
+    errors.salary = "Vui lòng nhập mức lương";
+    isValid = false;
+  }
+
+  if (!benefits.value.trim()) {
+    errors.benefits = "Vui lòng nhập quyền lợi";
+    isValid = false;
+  }
+
+  if (!obDescription.value.trim()) {
+    errors.obDescription = "Vui lòng nhập mô tả công việc";
+    isValid = false;
+  }
+
+  if (!jobRequest.value.trim()) {
+    errors.jobRequest = "Vui lòng nhập yêu cầu công việc";
+    isValid = false;
+  }
+
+  if (!languages.value.trim()) {
+    errors.languages = "Vui lòng nhập ngôn ngữ lập trình";
+    isValid = false;
+  }
+
+  if (!selectedFile.value) {
+    errors.logo = "Vui lòng tải lên logo công ty";
+    isValid = false;
+  }
+
+  return isValid;
+};
+
 const handleFiles = (files) => {
   gallery.value = [];
   uploadProgress.value = 0;
 
   Array.from(files).forEach((file) => {
+    selectedFile.value = file;
     const fileURL = URL.createObjectURL(file);
     gallery.value.push(fileURL);
     logoUrl.value = fileURL;
+    errors.logo = ""; // Clear logo error when file is selected
+
     const interval = setInterval(() => {
       if (uploadProgress.value < 100) {
         uploadProgress.value += 10;
@@ -240,51 +352,55 @@ const handleFiles = (files) => {
 };
 
 const fetchcreate = async () => {
+  if (!validateForm()) {
+    return;
+  }
+
   loading.value = true;
   try {
     const check = await fetch("http://localhost:3000/api/payos/coin", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token.value}`,
-        "Content-Type": "application/json",
       },
     });
 
     const checkcoins = await check.json();
     if (checkcoins.data.coins < 2000) {
       alert("Phải nạp đủ tiền mới có thể đăng bài!");
-      loading.value = false;
       return;
     }
 
-    const payload = {
-      title: title.value,
-      company: company.value,
-      location: location.value,
-      salary: salary.value,
-      logo: logoUrl.value,
-      benefits: benefits.value,
-      jobDescription: obDescription.value,
-      jobRequest: jobRequest.value,
-      programmingLanguages: languages.value,
-    };
+    const formData = new FormData();
+    formData.append("logo", selectedFile.value);
+    formData.append("title", title.value);
+    formData.append("company", company.value);
+    formData.append("location", location.value);
+    formData.append("salary", salary.value);
+    formData.append("benefits", benefits.value);
+    formData.append("jobDescription", obDescription.value);
+    formData.append("jobRequest", jobRequest.value);
+    formData.append("programmingLanguages", languages.value);
 
     const response = await fetch("http://localhost:3000/api/jobs/create", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token.value}`,
-        "Content-Type": "application/json",
       },
-      body: JSON.stringify(payload),
+      body: formData,
     });
-    const data = await response.json();
 
     if (!response.ok) {
       throw new Error("Network response was not ok");
     }
+
+    const data = await response.json();
     alert("Đăng tin thành công!");
   } catch (error) {
+    console.error("Error:", error);
     alert("Có lỗi xảy ra khi đăng tin!");
+  } finally {
+    loading.value = false;
   }
 };
 </script>
@@ -310,5 +426,17 @@ const fetchcreate = async () => {
   height: 10px;
   margin-top: 10px;
   display: block;
+}
+
+/* Thêm style cho validation */
+.invalid-feedback {
+  display: block;
+  color: #dc3545;
+  font-size: 0.875em;
+  margin-top: 0.25rem;
+}
+
+.is-invalid {
+  border-color: #dc3545;
 }
 </style>

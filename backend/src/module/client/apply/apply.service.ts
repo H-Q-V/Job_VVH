@@ -10,12 +10,15 @@ export class ApplyService {
 
   async create(applyDto: ApplyDto, user: any): Promise<Apply> {
     applyDto.userid = user.id;
+    console.log('a', applyDto);
+
     const data = await this.applyModel.create(applyDto);
     if (!data) {
       throw new NotFoundException('Failed to create apply');
     }
     return data;
   }
+
   async update(id: string, updateDto: UpdateApplyDto): Promise<any> {
     const update = await this.applyModel.updateOne(
       {

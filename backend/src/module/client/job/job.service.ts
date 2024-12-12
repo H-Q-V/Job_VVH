@@ -4,7 +4,6 @@ import { Model } from 'mongoose';
 import { Job } from 'src/schema/job.schema';
 import { JobDto } from './job.dto';
 import { Coin } from 'src/schema/coin.schema';
-
 @Injectable()
 export class JobService {
   constructor(

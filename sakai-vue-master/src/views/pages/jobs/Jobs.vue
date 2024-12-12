@@ -216,6 +216,14 @@ const deleteJobs = async (productId) => {
                 </span>
             </template>
         </Column>
+        <Column field="programmingLanguages" header="programmingLanguages" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+            <template #body="slotProps">
+                <span class="p-column-title">Language</span>
+                <span class="truncate-text" v-tooltip.top="slotProps.data.programmingLanguages">
+                    {{ slotProps.data.programmingLanguages }}
+                </span>
+            </template>
+        </Column>
         <Column headerStyle="min-width:10rem;">
             <template #body="slotProps">
                 <Button icon="pi pi-pencil" class="mr-2" severity="success" rounded @click="open(slotProps.data)" />
@@ -265,6 +273,11 @@ const deleteJobs = async (productId) => {
             <Textarea id="jobRequest" v-model.trim="product.jobRequest" required="true" autofocus :invalid="submitted && !!product.jobRequest" rows="4" />
             <small class="p-invalid" v-if="submitted && !product.jobRequest">Job Request is required.</small>
         </div>
+        <div class="field" field="_id">
+            <label for="programmingLanguages">Language</label>
+            <Textarea id="programmingLanguages" v-model.trim="product.programmingLanguages" required="true" autofocus :invalid="submitted && !!product.programmingLanguages" rows="4" />
+            <small class="p-invalid" v-if="submitted && !product.programmingLanguages">Job Request is required.</small>
+        </div>
         <template #footer>
             <Button label="Cancel" icon="pi pi-times" text="" @click="menuDialog = false" />
             <Button label="Save" icon="pi pi-check" text="" @click="createMenu" />
@@ -303,6 +316,10 @@ const deleteJobs = async (productId) => {
         <div class="field">
             <label for="jobRequest">Job Request</label>
             <Textarea id="jobRequest" v-model.trim="product.jobRequest" required autofocus rows="4" />
+        </div>
+        <div class="field">
+            <label for="programmingLanguages">Language</label>
+            <Textarea id="programmingLanguages" v-model.trim="product.programmingLanguages" required autofocus rows="4" />
         </div>
         <template #footer>
             <Button label="Cancel" icon="pi pi-times" @click="display = false" />

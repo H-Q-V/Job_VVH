@@ -1,4 +1,10 @@
-import { IsString, IsNotEmpty, ArrayMinSize, IsArray } from 'class-validator';
+import {
+  IsString,
+  IsNotEmpty,
+  ArrayMinSize,
+  IsArray,
+  IsOptional,
+} from 'class-validator';
 
 export class JobDto {
   @IsString()
@@ -17,16 +23,15 @@ export class JobDto {
   @IsNotEmpty()
   salary: string;
 
+  // @IsOptional()
   @IsString()
   @IsNotEmpty()
-  logo: string;
+  logo?: string;
 
-  // @IsString()
-  // @IsNotEmpty()
-  // benefits: string;
   @IsArray()
   @ArrayMinSize(1, { message: 'At least one benefit is required' })
   @IsString({ each: true })
+  @IsNotEmpty()
   benefits: string[];
 
   @IsString()
@@ -40,5 +45,6 @@ export class JobDto {
   @IsArray()
   @ArrayMinSize(1, { message: 'At least one programming language is required' })
   @IsString({ each: true })
+  @IsNotEmpty()
   programmingLanguages: string[];
 }

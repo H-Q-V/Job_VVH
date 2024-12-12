@@ -5,6 +5,7 @@ import { JobService } from './job.service';
 import { Job, JobSchema } from 'src/schema/job.schema';
 import { Coin, CoinSchema } from 'src/schema/coin.schema';
 import { PassportModule } from '@nestjs/passport';
+import { CloudinaryModule } from '../../../common/services/cloudinary.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { PassportModule } from '@nestjs/passport';
         schema: CoinSchema,
       },
     ]),
+    CloudinaryModule,
   ],
   controllers: [JobController],
   providers: [JobService],

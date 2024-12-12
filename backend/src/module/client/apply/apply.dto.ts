@@ -1,4 +1,5 @@
 import {
+  IsArray,
   IsNotEmpty,
   IsOptional,
   IsPhoneNumber,
@@ -41,6 +42,9 @@ export class ApplyDto {
   @IsString()
   @IsNotEmpty()
   file?: string[];
+  // @IsOptional()
+  // @IsArray()
+  // fileUrls?: string[];
 
   @IsString()
   @IsNotEmpty()
