@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div class="job-sidebar">
     <h2 class="widget-title">
       <span>Ngành Nghề</span>
@@ -117,5 +117,208 @@ export default {
 .job-category-count {
   color: #999;
   font-size: 0.9rem;
+}
+</style> -->
+
+<template>
+  <div class="job-sidebar">
+    <h2 class="widget-title">
+      <span>Địa điểm tuyển dụng</span>
+    </h2>
+    <div class="job-list">
+      <div class="catelog-list">
+        <div class="scroll-container">
+          <ul
+            class="job-list-category"
+            id="jobCategories"
+            ref="locationContainer"
+            @scroll="handleScroll"
+          >
+            <li v-for="location in displayedLocations" :key="location.location">
+              <a @click.prevent="selectLocation(location)" href="#">
+                <span class="cate-img">
+                  <i class="fa fa-map-marker"></i>
+                  <em>{{ location.location }}</em>
+                </span>
+                <span class="cate-count">({{ location.count }})</span>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="sb-banner">
+      <img src="@/assets/img/ads1.jpg" class="advertisement" />
+    </div>
+  </div>
+</template>
+
+<script>
+import axios from "axios";
+import { ref, computed, onMounted } from "vue";
+
+import SlickCarousel from "vue-slick-carousel";
+import "vue-slick-carousel/dist/vue-slick-carousel.css";
+export default {
+  name: "JobCategories",
+  components: {
+    SlickCarousel,
+  },
+  data() {
+    return {
+      locations: [],
+      displayedCount: 4,
+    };
+  },
+  setup() {
+    const locations = ref([]);
+    const locationContainer = ref(null);
+    const displayedCount = ref(10); // Số lượng hiển thị ban đầu
+
+    // Computed property để lấy số lượng địa điểm hiển thị
+    const displayedLocations = computed(() => {
+      return locations.value.slice(0, displayedCount.value);
+    });
+
+    const fetchLocations = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:3000/api/jobs/locations"
+        );
+        locations.value = response.data.data;
+      } catch (error) {
+        console.error("Error fetching locations:", error);
+      }
+    };
+
+    const handleScroll = (event) => {
+      const element = event.target;
+      const nearBottom =
+        element.scrollTop + element.clientHeight >= element.scrollHeight - 50;
+
+      if (nearBottom && displayedCount.value < locations.value.length) {
+        loadMore();
+      }
+    };
+
+    const loadMore = () => {
+      displayedCount.value += 3; // Load thêm 3 địa điểm mỗi lần scroll
+    };
+
+    const selectLocation = (location) => {
+      console.log("Selected location:", location);
+      // Thêm logic xử lý khi chọn địa điểm
+    };
+
+    onMounted(() => {
+      fetchLocations();
+    });
+
+    return {
+      displayedLocations,
+      locationContainer,
+      selectLocation,
+      handleScroll,
+    };
+  },
+};
+</script>
+
+<style scoped>
+/* Giữ nguyên CSS cũ */
+.job-sidebar {
+  background: #fff;
+  padding: 15px;
+  border-radius: 3px;
+  margin-bottom: 1rem;
+  margin-top: 30px;
+}
+
+.widget-title {
+  margin-bottom: 15px;
+}
+
+.widget-title span {
+  font-family: Roboto, Arial, sans-serif;
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  color: #3a3a3a;
+  font-weight: 500;
+}
+
+.scroll-container {
+  position: relative;
+  height: 300px;
+  overflow: hidden;
+}
+
+.job-list-category {
+  list-style-type: none;
+  padding: 0;
+  height: 100%;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.job-list-category::-webkit-scrollbar {
+  width: 6px;
+}
+
+.job-list-category::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.job-list-category::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+.job-list-category::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.job-list-category li {
+  margin-bottom: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.job-list-category li a {
+  color: #333;
+  font-size: 0.975rem;
+  text-decoration: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.job-list-category li a:hover {
+  color: #1a73e8;
+  transform: translateX(5px);
+}
+
+.cate-img {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cate-img i {
+  color: #1a73e8;
+  font-size: 14px;
+}
+
+.cate-count {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.advertisement {
+  width: 100%;
+  margin-top: 20px;
+  border-radius: 3px;
 }
 </style>

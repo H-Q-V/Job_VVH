@@ -1,4 +1,5 @@
 <script setup>
+import { ref } from "vue";
 import { RouterLink, RouterView } from "vue-router";
 import TaskBarMain from "@/components/Client/Header/TaskBarMain.vue";
 import Banner from "@/components/Client/Header/Banner.vue";
@@ -10,15 +11,28 @@ import TopEmployers from "@/components/Client/HomePage/TopEmployers.vue";
 import JobBestSalary from "@/components/Client/HomePage/JobBestSalary.vue";
 import New from "@/components/Client/HomePage/New.vue";
 import JdPage from "@/components/Client/jd-page/Jd-Page.vue";
+import Story from "@/components/Client/Story/Story.vue";
+
+// Tạo một ref để tham chiếu đến component UrgentJobs
+const urgentJobsRef = ref(null);
+
+// Phương thức để cập nhật danh sách công việc trong UrgentJobs
+const handleUpdateJobs = (jobs) => {
+  if (urgentJobsRef.value) {
+    urgentJobsRef.value.updateJobsList(jobs);
+  }
+};
 </script>
 
 <template>
   <TaskBarMain />
   <Banner />
-  <Search />
+  <!-- <Search /> -->
+  <Search @update-urgent-jobs="handleUpdateJobs" />
   <div class="container">
     <div class="row">
-      <UrgentJobs class="col-md-8" />
+      <!-- <UrgentJobs class="col-md-8" /> -->
+      <UrgentJobs ref="urgentJobsRef" class="col-md-8" />
       <JobCategories class="col-md-4" />
     </div>
     <div class="row">

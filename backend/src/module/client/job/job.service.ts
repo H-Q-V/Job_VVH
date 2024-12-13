@@ -65,4 +65,68 @@ export class JobService {
     }
     return job;
   }
+
+  async getAllProgrammingLanguages(): Promise<Job[]> {
+    const languages = await this.jobModel.distinct('programmingLanguages');
+    return languages;
+  }
+
+  async searchJobs({
+    keyword,
+    language,
+    location,
+  }: {
+    keyword: string;
+    language: string;
+    location: string;
+  }) {
+    const filter: any = {};
+
+    if (language) {
+      filter.programmingLanguages = language;
+    }
+
+    if (location) {
+      filter.location = location;
+    }
+
+    if (keyword) {
+      filter.$or = [
+        { title: { $regex: keyword, $options: 'i' } },
+        { company: { $regex: keyword, $options: 'i' } },
+        { jobDescription: { $regex: keyword, $options: 'i' } },
+      ];
+    }
+
+    return this.jobModel.find(filter).exec();
+  }
+  async getUrgentJobs(): Promise<Job[]> {
+    return this.jobModel.find({ isUrgent: true }).exec();
+  }
+  async getLocationsWithCount(): Promise<any[]> {
+    try {
+      const locations = await this.jobModel.aggregate([
+        {
+          $group: {
+            _id: '$location',
+            count: { $sum: 1 },
+          },
+        },
+        {
+          $project: {
+            location: '$_id',
+            count: 1,
+            _id: 0,
+          },
+        },
+        {
+          $sort: { count: -1 },
+        },
+      ]);
+      return locations;
+    } catch (error) {
+      console.error('Error in getLocationsWithCount:', error);
+      throw error;
+    }
+  }
 }

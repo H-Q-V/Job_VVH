@@ -3,7 +3,8 @@ import {
   IsNotEmpty,
   ArrayMinSize,
   IsArray,
-  IsOptional,
+  // IsOptional,
+  IsBoolean,
 } from 'class-validator';
 
 export class JobDto {
@@ -47,4 +48,7 @@ export class JobDto {
   @IsString({ each: true })
   @IsNotEmpty()
   programmingLanguages: string[];
+
+  @IsBoolean()
+  isUrgent: boolean;
 }

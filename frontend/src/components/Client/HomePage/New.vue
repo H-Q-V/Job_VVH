@@ -1,213 +1,238 @@
 <template>
-   <div class="container-fluid">
-  <div class="container news-wrapper">
-    <div class="row">
-      <div class="col-md-12 news-wrapper-head">
-        Tư vấn nghề nghiệp từ HR Insider
-      </div>
-      <div class="col-md-4 col-sm-12 col-12 news-item">
-        <div class="news-item-inner">
-          <a href="#wrap">
-            <div class="news-thumb" style="background-image: url(/src/assets/img/news1.jpg);"></div>
-          </a>
+  <div class="container-fluid">
+    <div class="container news-wrapper">
+      <div class="row">
+        <div class="col-md-12 news-wrapper-head">
+          Tư vấn nghề nghiệp từ HR Insider
+        </div>
+        <div class="col-md-4 col-sm-12 col-12 news-item" @click="goToStory">
+          <div class="news-item-inner">
+            <a href="#wrap">
+              <div
+                class="news-thumb"
+                style="background-image: url(/src/assets/img/news1.jpg)"
+              ></div>
+            </a>
             <div class="news-details">
               <div class="tags">
                 <a href="#tag1">Quyền lợi nhân viên</a>
               </div>
               <div class="title">
-                <a href="#"> 
-                  5 thời điểm doanh nghiệp không được buộc người lao động thôi việc
+                <a href="#">
+                  5 thời điểm doanh nghiệp không được buộc người lao động thôi
+                  việc
                 </a>
-                </div>
+              </div>
               <div class="meta">
-                Khi nào thì người sử dụng lao động được quyền đơn phương chấm dứt hợp đồng khi nào thì không? Cùng tham khảo bài viết sau đây để hiểu thêm về quyền lợi của người lao động Việt Nam nhé!
+                Khi nào thì người sử dụng lao động được quyền đơn phương chấm
+                dứt hợp đồng khi nào thì không? Cùng tham khảo bài viết sau đây
+                để hiểu thêm về quyền lợi của người lao động Việt Nam nhé!
               </div>
             </div>
-          
+          </div>
         </div>
-      </div>
-      <div class="col-md-4 col-sm-12 col-12 news-item">
-        <div class="news-item-inner">
-          <a href="#wrap">
-            <div class="news-thumb" style="background-image: url(/src/assets/img/news2.jpg);"></div>
-          </a>
+        <div class="col-md-4 col-sm-12 col-12 news-item" @click="goToStory">
+          <div class="news-item-inner">
+            <a href="#wrap">
+              <div
+                class="news-thumb"
+                style="background-image: url(/src/assets/img/news2.jpg)"
+              ></div>
+            </a>
             <div class="news-details">
               <div class="tags">
                 <a href="#tag1">Trước khi nhảy việc</a>
               </div>
               <div class="title">
-                <a href="#"> 
-                  Nhảy việc và những con số bạn cần phải lưu tâm
-                </a>
-                </div>
+                <a href="#"> Nhảy việc và những con số bạn cần phải lưu tâm </a>
+              </div>
               <div class="meta">
-                Dù bạn nhảy việc vì lý do gì cũng hãy cân nhắc đến những “con số” sau đây nhé!
+                Dù bạn nhảy việc vì lý do gì cũng hãy cân nhắc đến những “con
+                số” sau đây nhé!
               </div>
             </div>
-          
+          </div>
         </div>
-      </div>
-      <div class="col-md-4 col-sm-12 col-12 news-item">
-        <div class="news-item-inner">
-          <a href="#wrap">
-            <div class="news-thumb" style="background-image: url(/src/assets/img/news3.png);"></div>
-          </a>
+        <div class="col-md-4 col-sm-12 col-12 news-item" @click="goToStory">
+          <div class="news-item-inner">
+            <a href="#wrap">
+              <div
+                class="news-thumb"
+                style="background-image: url(/src/assets/img/news3.png)"
+              ></div>
+            </a>
             <div class="news-details">
               <div class="tags">
                 <a href="#tag1">Huấn luyện nhân sự</a>
               </div>
               <div class="title">
-                <a href="#"> 
-                 Đánh giá: bước đệm cần thiết trong việc đào tạo huấn luyện nhân viên
+                <a href="#">
+                  Đánh giá: bước đệm cần thiết trong việc đào tạo huấn luyện
+                  nhân viên
                 </a>
-                </div>
+              </div>
               <div class="meta">
-                Cú sốc về kinh tế do Covid-19 gây ra đã khiến cho nhiều doanh nghiệp lớn và nhỏ phải nhanh chóng tìm ra các phương án ứng phó tốc độ và hiệu quả để giải quyết bài toán về tìn...
+                Cú sốc về kinh tế do Covid-19 gây ra đã khiến cho nhiều doanh
+                nghiệp lớn và nhỏ phải nhanh chóng tìm ra các phương án ứng phó
+                tốc độ và hiệu quả để giải quyết bài toán về tìn...
               </div>
             </div>
-          
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
-<!-- (end) news -->
+  <!-- (end) news -->
 
-<!-- job support -->
-<div class="container-fluid job-support-wrapper">
- <div class="container-fluid job-support-wrap">
-  <div class="container job-support">
-    <div class="row">
-      <div class="col-md-6 col-sm-12 col-12">
-        <ul class="spp-list">
-          <li>
-            <span><i class="fa fa-question-circle pr-2 icsp"></i>Hỗ trợ nhà tuyển dụng:</span>
-          </li>
-          <li>
-            <span><i class="fa fa-phone pr-2 icsp"></i>0123.456.789</span>
-          </li>
-        </ul>
-      </div>
-      <div class="col-md-6 col-sm-12 col-12">
-        <div class="newsletter">
-            <span class="txt6">Đăng ký nhận bản tin việc làm</span>
-            <div class="input-group frm1">
-              <input type="text" placeholder="Nhập email của bạn" class="newsletter-email form-control">
-              <a href="#" class="input-group-addon"><i class="fa fa-lg fa-envelope-o colorb"></i></a>
+  <!-- job support -->
+  <div class="container-fluid job-support-wrapper">
+    <div class="container-fluid job-support-wrap">
+      <div class="container job-support">
+        <div class="row">
+          <div class="col-md-6 col-sm-12 col-12">
+            <ul class="spp-list">
+              <li>
+                <span
+                  ><i class="fa fa-question-circle pr-2 icsp"></i>Hỗ trợ nhà
+                  tuyển dụng:</span
+                >
+              </li>
+              <li>
+                <span><i class="fa fa-phone pr-2 icsp"></i>0123.456.789</span>
+              </li>
+            </ul>
+          </div>
+          <div class="col-md-6 col-sm-12 col-12">
+            <div class="newsletter">
+              <span class="txt6">Đăng ký nhận bản tin việc làm</span>
+              <div class="input-group frm1">
+                <input
+                  type="text"
+                  placeholder="Nhập email của bạn"
+                  class="newsletter-email form-control"
+                />
+                <a href="#" class="input-group-addon"
+                  ><i class="fa fa-lg fa-envelope-o colorb"></i
+                ></a>
+              </div>
             </div>
           </div>
+        </div>
       </div>
     </div>
   </div>
-</div>
-</div>
-<!-- (end) job support -->
+  <!-- (end) job support -->
 
-<!-- footer -->
-<div class="container-fluid footer-wrap  clear-left clear-right">
-  <div class="container footer">
-    <div class="row">
-      <div class="col-md-4 col-sm-8 col-12">
-        <h2 class="footer-heading">
-          <span>About</span>
-        </h2>
-        <p class="footer-content">
-          Discover the best way to find houses, condominiums, apartments and HDBs for sale and rent in Singapore with JobsOnline, Singapore's Fastest Growing Jobs Portal.
-        </p>
-        <ul class="footer-contact">
-          <li>
-            <a href="#">
-              <i class="fa fa-phone fticn"></i> +123 456 7890
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <i class="fa fa-envelope fticn"></i> 
-              hello@123.com
-            </a>
-          </li>
-          <li>
-            <a href="#">
-              <i class="fa fa-map-marker fticn"></i>
-              33 Xô Viết Nghệ Tĩnh, Đà Nẵng
-            </a>
-          </li>
-        </ul>
+  <!-- footer -->
+  <div class="container-fluid footer-wrap clear-left clear-right">
+    <div class="container footer">
+      <div class="row">
+        <div class="col-md-4 col-sm-8 col-12">
+          <h2 class="footer-heading">
+            <span>About</span>
+          </h2>
+          <p class="footer-content">
+            Discover the best way to find houses, condominiums, apartments and
+            HDBs for sale and rent in Singapore with JobsOnline, Singapore's
+            Fastest Growing Jobs Portal.
+          </p>
+          <ul class="footer-contact">
+            <li>
+              <a href="#"> <i class="fa fa-phone fticn"></i> +123 456 7890 </a>
+            </li>
+            <li>
+              <a href="#">
+                <i class="fa fa-envelope fticn"></i>
+                hello@123.com
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <i class="fa fa-map-marker fticn"></i>
+                33 Xô Viết Nghệ Tĩnh, Đà Nẵng
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="col-md-2 col-sm-4 col-12">
+          <h2 class="footer-heading">
+            <span>Ngôn ngữ nổi bật</span>
+          </h2>
+          <ul class="footer-list">
+            <li><a href="#">Javascript</a></li>
+            <li><a href="#">Java</a></li>
+            <li><a href="#">Frontend</a></li>
+            <li><a href="#">SQL Server</a></li>
+            <li><a href="#">.NET</a></li>
+          </ul>
+        </div>
+        <div class="col-md-2 col-sm-6 col-12">
+          <h2 class="footer-heading">
+            <span>Tất cả ngành nghề</span>
+          </h2>
+          <ul class="footer-list">
+            <li><a href="#">Lập trình viên</a></li>
+            <li><a href="#">Kiểm thử phần mềm</a></li>
+            <li><a href="#">Kỹ sư cầu nối</a></li>
+            <li><a href="#">Quản lý dự án</a></li>
+          </ul>
+        </div>
+        <div class="col-md-2 col-sm-6 col-12">
+          <h2 class="footer-heading">
+            <span>Tất cả hình thức</span>
+          </h2>
+          <ul class="footer-list">
+            <li><a href="#">Nhân viên chính thức</a></li>
+            <li><a href="#">Nhân viên bán thời gian</a></li>
+            <li><a href="#">Freelancer</a></li>
+          </ul>
+        </div>
+        <div class="col-md-2 col-sm-12 col-12">
+          <h2 class="footer-heading">
+            <span>Tất cả tỉnh thành</span>
+          </h2>
+          <ul class="footer-list">
+            <li><a href="#">Hồ Chính Minh</a></li>
+            <li><a href="#">Hà Nội</a></li>
+            <li><a href="#">Đà Nẵng</a></li>
+            <li><a href="#">Buôn Ma Thuột</a></li>
+          </ul>
+        </div>
       </div>
-      <div class="col-md-2 col-sm-4 col-12">
-        <h2 class="footer-heading">
-          <span>Ngôn ngữ nổi bật</span>
-        </h2>
-        <ul class="footer-list">
-          <li><a href="#">Javascript</a></li>
-          <li><a href="#">Java</a></li>
-          <li><a href="#">Frontend</a></li>
-          <li><a href="#">SQL Server</a></li>
-          <li><a href="#">.NET</a></li>
-        </ul>
-      </div>
-      <div class="col-md-2 col-sm-6 col-12">
-        <h2 class="footer-heading">
-          <span>Tất cả ngành nghề</span>
-        </h2>
-        <ul class="footer-list">
-          <li><a href="#">Lập trình viên</a></li>
-          <li><a href="#">Kiểm thử phần mềm</a></li>
-          <li><a href="#">Kỹ sư cầu nối</a></li>
-          <li><a href="#">Quản lý dự án</a></li>
-        </ul>
-      </div>
-      <div class="col-md-2 col-sm-6 col-12">
-        <h2 class="footer-heading">
-          <span>Tất cả hình thức</span>
-        </h2>
-        <ul class="footer-list">
-          <li><a href="#">Nhân viên chính thức</a></li>
-          <li><a href="#">Nhân viên bán thời gian</a></li>
-          <li><a href="#">Freelancer</a></li>
-        </ul>
-      </div>
-      <div class="col-md-2 col-sm-12 col-12">
-        <h2 class="footer-heading">
-          <span>Tất cả tỉnh thành</span>
-        </h2>
-        <ul class="footer-list">
-          <li><a href="#">Hồ Chính Minh</a></li>
-          <li><a href="#">Hà Nội</a></li>
-          <li><a href="#">Đà Nẵng</a></li>
-          <li><a href="#">Buôn Ma Thuột</a></li>
-        </ul>
-      </div>
-
-
     </div>
   </div>
-</div>
 
-<footer class="container-fluid copyright-wrap">
-  <div class="container copyright">
-    <p class="copyright-content">
-      Copyright © 2020 <a href="#"> Tech<b>Job</b></a>. All Right Reserved.
-    </p>
-  </div>
-</footer>
+  <footer class="container-fluid copyright-wrap">
+    <div class="container copyright">
+      <p class="copyright-content">
+        Copyright © 2020 <a href="#"> Tech<b>Job</b></a
+        >. All Right Reserved.
+      </p>
+    </div>
+  </footer>
+</template>
 
- </template>
- 
- <script>
- import { onMounted } from 'vue'; 
- import 'bootstrap/dist/css/bootstrap.min.css';
- 
- export default {
-   name: 'New',
-   setup() {
-     
-   }
- }
- </script>
- 
- <style scoped>
- .news-item-inner {
+<script>
+import { useRouter } from "vue-router";
+
+export default {
+  name: "New",
+  setup() {
+    const router = useRouter();
+
+    const goToStory = () => {
+      router.push("/story"); // hoặc { name: 'story' }
+    };
+
+    return {
+      goToStory,
+    };
+  },
+};
+</script>
+
+<style scoped>
+.news-item-inner {
   background: #fff;
   border-radius: 3px;
   overflow: hidden;
@@ -373,4 +398,4 @@ a.readallstyle.reads2:hover {
   text-align: center;
   margin-top: 10px;
 }
- </style>
+</style>

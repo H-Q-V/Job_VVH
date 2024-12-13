@@ -7,6 +7,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
   Request,
   UploadedFile,
   UseGuards,
@@ -88,6 +89,53 @@ export class JobController {
       data: jobs,
     };
   }
+  @Get('/languages')
+  async getProgrammingLanguages() {
+    const languages = await this.jobService.getAllProgrammingLanguages();
+    return {
+      success: true,
+      code: 200,
+      data: languages,
+    };
+  }
+
+  @Get('/search')
+  async searchJobs(
+    @Query('keyword') keyword: string,
+    @Query('language') language: string,
+    @Query('location') location: string,
+    // @Query('isUrgent') isUrgent: boolean = true,
+  ) {
+    const jobs = await this.jobService.searchJobs({
+      keyword,
+      language,
+      location,
+    });
+    return {
+      success: true,
+      code: 200,
+      data: jobs,
+    };
+  }
+  @Get('/urgent')
+  async getUrgentJobs() {
+    const jobs = await this.jobService.getUrgentJobs();
+    return {
+      success: true,
+      code: 200,
+      data: jobs,
+    };
+  }
+  @Get('locations')
+  async getLocationsWithCount() {
+    const locations = await this.jobService.getLocationsWithCount();
+    return {
+      success: true,
+      code: 200,
+      data: locations,
+    };
+  }
+
   @Get(':id')
   async getJobById(@Param('id') id: string) {
     const job = await this.jobService.getJobById(id);

@@ -8,9 +8,11 @@ import Otp from "@/components/Client/Accuracy/Otp.vue";
 import Main from "@/views/Main.vue";
 import App from "@/App.vue";
 import JdPage from "@/components/Client/jd-page/Jd-Page.vue";
+import Search from "@/components/Client/search/Search.vue";
 import Recruitment from "@/views/Recruitment.vue";
 import Payment from "../views/Payment.vue";
 import Apply from "../views/Apply.vue";
+import Story from "@/components/Client/Story/Story.vue";
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -36,6 +38,11 @@ const router = createRouter({
       ],
     },
     {
+      path: "/search",
+      name: "Search",
+      component: Search,
+    },
+    {
       path: "/recruitment",
       name: "recruitment",
       component: Recruitment,
@@ -49,6 +56,16 @@ const router = createRouter({
       path: "/apply",
       name: "apply",
       component: Apply,
+    },
+    {
+      path: "/apply",
+      name: "apply",
+      component: Apply,
+    },
+    {
+      path: "/story",
+      name: "story",
+      component: Story,
     },
   ],
 });

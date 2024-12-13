@@ -223,6 +223,14 @@
               </div>
             </div>
           </div>
+          <div class="form-group row">
+            <label class="col-sm-3 col-form-label text-right label"
+              >Tuyển gấp</label
+            >
+            <div class="col-sm-9">
+              <input type="checkbox" v-model="isUrgent" />
+            </div>
+          </div>
           <div class="rec-submit">
             <button
               type="submit"
@@ -259,7 +267,7 @@ const logoUrl = ref("");
 const selectedFile = ref(null);
 const token = ref(localStorage.getItem("token"));
 const loading = ref(false);
-
+const isUrgent = ref(false);
 const errors = reactive({
   title: "",
   company: "",
@@ -381,7 +389,7 @@ const fetchcreate = async () => {
     formData.append("jobDescription", obDescription.value);
     formData.append("jobRequest", jobRequest.value);
     formData.append("programmingLanguages", languages.value);
-
+    formData.append("isUrgent", isUrgent.value);
     const response = await fetch("http://localhost:3000/api/jobs/create", {
       method: "POST",
       headers: {
