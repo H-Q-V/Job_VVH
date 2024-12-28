@@ -1,9 +1,20 @@
 <script setup>
 import { useConfirm } from 'primevue/useconfirm';
 import { useToast } from 'primevue/usetoast';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, reactive } from 'vue';
 
-const product = ref({});
+const product = ref({
+    title: '',
+    company: '',
+    location: '',
+    salary: '',
+    logo: null,
+    benefits: '',
+    jobDescription: '',
+    jobRequest: '',
+    programmingLanguages: '',
+    isUrgent: false,
+});
 const menuItems = ref([]);
 const selectedMenuItems = ref(null);
 const submitted = ref(false);
@@ -15,14 +26,25 @@ const confirmPopup = useConfirm();
 const toast = useToast();
 
 const openNew = () => {
-    product.value = {};
+    product.value = {
+        title: '',
+        company: '',
+        location: '',
+        salary: '',
+        logo: null,
+        benefits: '',
+        jobDescription: '',
+        jobRequest: '',
+        programmingLanguages: '',
+        isUrgent: false,
+    };
     submitted.value = false;
     menuDialog.value = true;
 };
 const open = (editProduct) => {
     //display.value = { ...editProduct };
     product.value = { ...editProduct };
-    display.value = true; // Hiển thị dialog chỉnh sửa
+    display.value = true;
 };
 const confirm = (event, product) => {
     productToDelete.value = product;
@@ -47,24 +69,68 @@ onMounted(async () => {
         console.log(err);
     }
 });
+const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        product.value.logo = file.name; 
+    }
+};
+const selectFile = () => {
+    const fileInput = document.querySelector('input[type="file"]');
+    fileInput.click();
+};
 
 const createMenu = async () => {
+    const requiredFields = [
+        { key: 'title', message: 'Title trường bị trống.' },
+        { key: 'company', message: 'Company trường bị trống.' },
+        { key: 'location', message: 'Location trường bị trống.' },
+        { key: 'salary', message: 'Salary trường bị trống.' },
+        { key: 'logo', message: 'Logo trường bị trống.' },
+        { key: 'benefits', message: 'Benefits trường bị trống.' },
+        { key: 'jobDescription', message: 'Job Description trường bị trống.' },
+        { key: 'jobRequest', message: 'Job Request is required.' },
+        { key: 'programmingLanguages', message: 'Programming Languages trường bị trống.' },
+    ];
+
+    const missingFields = requiredFields.filter(field => !product.value[field.key]);
+
+if (missingFields.length === requiredFields.length) {
+    toast.add({ severity: 'error', summary: 'Error', detail: 'Không có trường nào được nhập.', life: 3000 });
+    return;
+} else if (missingFields.length > 0) {
+    const messages = missingFields.map(field => field.message).join(' ');
+    toast.add({ severity: 'error', summary: 'Error', detail: `Bạn chưa thêm trường: ${messages}`, life: 3000 });
+    return;
+}
+    const formData = new FormData();
+    formData.append('title', product.value.title);
+    formData.append('company', product.value.company);
+    formData.append('location', product.value.location);
+    formData.append('salary', product.value.salary);
+    formData.append('logo', product.value.logo); 
+
+    formData.append('benefits', product.value.benefits);
+
+    formData.append('jobDescription', product.value.jobDescription);
+    formData.append('jobRequest', product.value.jobRequest);
+    formData.append('programmingLanguages', product.value.programmingLanguages);
+    formData.append('isUrgent', product.value.isUrgent ? 'true' : 'false');
+
+
     try {
-        const response = await fetch('http://localhost:3000/api/jobs/create', {
+        const response = await fetch('http://localhost:3000/api/jobs/admin/create', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(product.value)
+            body: formData, 
         });
         const data = await response.json();
         if (response.ok) {
-            menuItems.value.push(data);
+            menuItems.value.push(data.data);
             menuDialog.value = false;
-            toast.add({ severity: 'success', summary: 'Success', detail: 'Tag created successfully', life: 3000 });
+            toast.add({ severity: 'success', summary: 'Success', detail: 'Job created successfully', life: 3000 });
         } else {
             console.error(data);
-            toast.add({ severity: 'error', summary: 'Error', detail: data.message || 'Failed to create tag', life: 3000 });
+            toast.add({ severity: 'error', summary: 'Error', detail: data.message || 'Failed to create job', life: 3000 });
         }
     } catch (error) {
         console.error(error);
@@ -85,9 +151,10 @@ const updateJobs = async () => {
         if (response.ok) {
             const index = menuItems.value.findIndex((item) => item._id === product.value._id);
             if (index !== -1) {
-                menuItems.value[index] = data; // Cập nhật sản phẩm trong danh sách
+                menuItems.value[index] = data; 
             }
-            display.value = false; // Đóng dialog
+            display.value = false; 
+            location.reload();
             toast.add({ severity: 'success', summary: 'Success', detail: 'Menu updated successfully', life: 3000 });
         } else {
             console.error(data);
@@ -100,20 +167,22 @@ const updateJobs = async () => {
 };
 
 const deleteJobs = async (productId) => {
+    if (!productId) {
+        toast.add({ severity: 'error', summary: 'Error', detail: 'Product ID is required for deletion.', life: 3000 });
+        return;
+    }
+
     try {
         const response = await fetch(`http://localhost:3000/api/jobs/delete/${productId}`, {
             method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            }
         });
         const data = await response.json();
         if (response.ok) {
-            menuItems.value = menuItems.value.filter((item) => item._id !== productId);
-            toast.add({ severity: 'success', summary: 'Success', detail: 'Menu deleted successfully', life: 3000 });
+            menuItems.value = menuItems.value.filter(item => item._id !== productId);
+            toast.add({ severity: 'success', summary: 'Success', detail: 'Job deleted successfully', life: 3000 });
         } else {
             console.error(data);
-            toast.add({ severity: 'error', summary: 'Error', detail: data.message || 'Failed to delete menu', life: 3000 });
+            toast.add({ severity: 'error', summary: 'Error', detail: data.message || 'Failed to delete job', life: 3000 });
         }
     } catch (error) {
         console.error(error);
@@ -183,7 +252,7 @@ const deleteJobs = async (productId) => {
         <Column field="logo" header="Logo" :sortable="true" headerStyle="width:14%; min-width:10rem;">
             <template #body="slotProps">
                 <span class="p-column-title">Logo</span>
-                {{ slotProps.data.logo }}
+                <img :src="slotProps.data.logo" alt="Logo" class="preview-image" />
             </template>
         </Column>
         <!-- <Column headerStyle="min-width:10rem;">
@@ -193,13 +262,13 @@ const deleteJobs = async (productId) => {
             </template>
         </Column> -->
         <Column field="benefits" header="Benefits" :sortable="true" headerStyle="width:14%; min-width:10rem;">
-            <template #body="slotProps">
-                <span class="p-column-title">Benefits</span>
-                <span class="truncate-text" v-tooltip.top="slotProps.data.benefits">
-                    {{ slotProps.data.benefits }}
-                </span>
-            </template>
-        </Column>
+    <template #body="slotProps">
+        <span class="p-column-title">Benefits</span>
+        <span class="truncate-text" v-tooltip.top="slotProps.data.benefits">
+            {{ Array.isArray(slotProps.data.benefits) ? slotProps.data.benefits.join(', ') : slotProps.data.benefits }}
+        </span>
+    </template>
+</Column>
         <Column field="jobDescription" header="Job Description" :sortable="true" headerStyle="width:14%; min-width:10rem;">
             <template #body="slotProps">
                 <span class="p-column-title">Job Description</span>
@@ -220,8 +289,14 @@ const deleteJobs = async (productId) => {
             <template #body="slotProps">
                 <span class="p-column-title">Language</span>
                 <span class="truncate-text" v-tooltip.top="slotProps.data.programmingLanguages">
-                    {{ slotProps.data.programmingLanguages }}
-                </span>
+            {{ Array.isArray(slotProps.data.programmingLanguages) ? slotProps.data.programmingLanguages.join(', ') : slotProps.data.programmingLanguages }}
+        </span>
+            </template>
+        </Column>
+        <Column field="isUrgent" header="Urgent" :sortable="true" headerStyle="width:14%; min-width:10rem;">
+            <template #body="slotProps">
+                <span class="p-column-title">Urgent</span>
+                <span>{{ slotProps.data.isUrgent ? 'Yes' : 'No' }}</span>
             </template>
         </Column>
         <Column headerStyle="min-width:10rem;">
@@ -254,10 +329,14 @@ const deleteJobs = async (productId) => {
             <small class="p-invalid" v-if="submitted && !product.salary">Salary is required.</small>
         </div>
         <div class="field" field="_id">
-            <label for="logo">Logo</label>
-            <InputText id="salary" v-model.trim="product.logo" required="true" autofocus :invalid="submitted && !!product.logo" />
-            <small class="p-invalid" v-if="submitted && !product.logo">Salary is required.</small>
+        <label for="logo">Logo</label>
+        <div class="file-upload">
+            <input type="file" id="logo" ref="fileInput" @change="handleFileChange" accept="image/*" style="display: none;" />
+            <Button label="Choose File" icon="pi pi-upload" @click="selectFile" />
+            <span v-if="product.logo" class="file-name">{{ product.logo }}</span>
         </div>
+        <small class="p-invalid" v-if="submitted && !product.logo">Logo is required.</small>
+    </div>
         <div class="field" field="_id">
             <label for="benefits">Benefits</label>
             <InputText id="benefits" v-model.trim="product.benefits" required="true" autofocus :invalid="submitted && !!product.benefits" />
@@ -277,6 +356,10 @@ const deleteJobs = async (productId) => {
             <label for="programmingLanguages">Language</label>
             <Textarea id="programmingLanguages" v-model.trim="product.programmingLanguages" required="true" autofocus :invalid="submitted && !!product.programmingLanguages" rows="4" />
             <small class="p-invalid" v-if="submitted && !product.programmingLanguages">Job Request is required.</small>
+        </div>
+        <div class="field">
+            <label for="isUrgent">Is Urgent</label>
+            <InputSwitch v-model="product.isUrgent" />
         </div>
         <template #footer>
             <Button label="Cancel" icon="pi pi-times" text="" @click="menuDialog = false" />
@@ -303,7 +386,7 @@ const deleteJobs = async (productId) => {
         </div>
         <div class="field">
             <label for="logo">Logo</label>
-            <InputText id="salary" v-model.trim="product.logo" required autofocus />
+            <InputText id="logo" v-model.trim="product.logo" readonly /> 
         </div>
         <div class="field">
             <label for="benefits">Benefits</label>
@@ -337,5 +420,12 @@ const deleteJobs = async (productId) => {
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+.preview-image {
+    max-width: 100px;
+    max-height: 100px;
+    object-fit: cover;
+    border: 1px solid #ddd;
+    border-radius: 5px;
 }
 </style>

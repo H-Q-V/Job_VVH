@@ -75,23 +75,19 @@
             </div>
           </div>
           <div class="form-group row">
-            <label class="col-sm-3 col-form-label text-right label"
-              >Location<span style="color: red" class="pl-2">*</span></label
-            >
+          <label class="col-sm-3 col-form-label text-right label">Location<span style="color: red" class="pl-2">*</span></label>
             <div class="col-sm-9">
-              <textarea
-                v-model="location"
-                type="text"
-                class="form-control"
-                placeholder="Nhập địa điểm"
-                rows="5"
-                :class="{ 'is-invalid': errors.location }"
-              ></textarea>
-              <div v-if="errors.location" class="invalid-feedback">
-                {{ errors.location }}
-              </div>
-            </div>
-          </div>
+      <!-- Thay thế textarea bằng select -->
+            <select v-model="location" class="form-control">
+              <option value="">Chọn địa điểm</option>
+              <option v-for="province in provinces" 
+                :key="province.code" 
+                :value="province.name">
+            {{ province.name }}
+          </option>
+        </select>
+      </div>
+     </div>
           <div class="form-group row">
             <label class="col-sm-3 col-form-label text-right label"
               >Salary<span style="color: red" class="pl-2">*</span></label
@@ -149,24 +145,27 @@
               </div>
             </div>
           </div>
-          <div class="form-group row">
-            <label class="col-sm-3 col-form-label text-right label"
-              >Benefits<span style="color: red" class="pl-2">*</span></label
-            >
-            <div class="col-sm-9">
-              <textarea
-                v-model="benefits"
-                type="text"
-                class="form-control"
-                placeholder="Nhập quyền lợi"
-                rows="5"
-                :class="{ 'is-invalid': errors.benefits }"
-              ></textarea>
-              <div v-if="errors.benefits" class="invalid-feedback">
-                {{ errors.benefits }}
-              </div>
-            </div>
+         <!-- Phần Benefits -->
+  <div class="form-group row">
+    <label class="col-sm-3 col-form-label text-right label">Benefits<span style="color: red" class="pl-2">*</span></label>
+    <div class="col-sm-9">
+      <div class="benefits-container">
+        <div v-for="(benefit, index) in benefitsArray" :key="index" class="benefit-item">
+          <div class="benefit-input-group">
+            <input 
+              v-model="benefitsArray[index]" 
+              type="text" 
+              class="form-control"
+              placeholder="Nhập lợi ích"
+            />
+            <button @click="removeBenefit(index)" class="btn-remove">×</button>
           </div>
+        </div>
+        <button @click="addBenefit" class="btn-add">+ Thêm lợi ích</button>
+      </div>
+    </div>
+          </div>
+        </div>
           <div class="form-group row">
             <label class="col-sm-3 col-form-label text-right label"
               >Job Description<span style="color: red" class="pl-2"
@@ -206,23 +205,26 @@
             </div>
           </div>
           <div class="form-group row">
-            <label class="col-sm-3 col-form-label text-right label"
-              >Languages<span style="color: red" class="pl-2">*</span></label
-            >
-            <div class="col-sm-9">
-              <textarea
-                v-model="languages"
-                type="text"
-                class="form-control"
-                placeholder="Nhập ngôn ngữ lập trình"
-                rows="5"
-                :class="{ 'is-invalid': errors.languages }"
-              ></textarea>
-              <div v-if="errors.languages" class="invalid-feedback">
-                {{ errors.languages }}
-              </div>
-            </div>
+ <!-- Phần Languages -->
+ <div class="form-group row">
+    <label class="col-sm-3 col-form-label text-right label">Languages<span style="color: red" class="pl-2">*</span></label>
+    <div class="col-sm-9">
+      <div class="languages-container">
+        <div v-for="(language, index) in languagesArray" :key="index" class="language-item">
+          <div class="language-input-group">
+            <input 
+              v-model="languagesArray[index]" 
+              type="text" 
+              class="form-control"
+              placeholder="Nhập ngôn ngữ lập trình"
+            />
+            <button @click="removeLanguage(index)" class="btn-remove">×</button>
           </div>
+        </div>
+        <button @click="addLanguage" class="btn-add">+ Thêm ngôn ngữ</button>
+      </div>
+    </div>
+  </div>
           <div class="form-group row">
             <label class="col-sm-3 col-form-label text-right label"
               >Tuyển gấp</label
@@ -250,7 +252,7 @@
 </template>
 
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive,onMounted } from "vue";
 import imgbanner from "@/assets/img/hna2.jpg";
 
 const uploadProgress = ref(0);
@@ -259,15 +261,17 @@ const title = ref("");
 const company = ref("");
 const location = ref("");
 const salary = ref("");
-const benefits = ref("");
+const benefitsArray = ref(['']);
 const obDescription = ref("");
 const jobRequest = ref("");
-const languages = ref("");
+const languagesArray = ref(['']);
 const logoUrl = ref("");
 const selectedFile = ref(null);
 const token = ref(localStorage.getItem("token"));
 const loading = ref(false);
 const isUrgent = ref(false);
+const provinces = ref([]);
+
 const errors = reactive({
   title: "",
   company: "",
@@ -280,11 +284,43 @@ const errors = reactive({
   logo: "",
 });
 
+
+const addBenefit = () => {
+  benefitsArray.value.push('');
+};
+
+const removeBenefit = (index) => {
+  if (benefitsArray.value.length > 1) {
+    benefitsArray.value.splice(index, 1);
+  }
+};
+
+// Thêm các hàm xử lý languages
+const addLanguage = () => {
+  languagesArray.value.push('');
+};
+
+const removeLanguage = (index) => {
+  if (languagesArray.value.length > 1) {
+    languagesArray.value.splice(index, 1);
+  }
+};
+
+
 const clearErrors = () => {
   Object.keys(errors).forEach((key) => {
     errors[key] = "";
   });
 };
+onMounted(async () => {
+  try {
+    const res = await fetch("https://api.mysupership.vn/v1/partner/areas/province");
+    const data = await res.json();
+    provinces.value = data.results;
+  } catch (error) {
+    console.error("Error fetching provinces:", error);
+  }
+});
 
 const validateForm = () => {
   clearErrors();
@@ -310,7 +346,7 @@ const validateForm = () => {
     isValid = false;
   }
 
-  if (!benefits.value.trim()) {
+  if (benefitsArray.value.every(benefit => !benefit.trim())) {
     errors.benefits = "Vui lòng nhập quyền lợi";
     isValid = false;
   }
@@ -325,7 +361,7 @@ const validateForm = () => {
     isValid = false;
   }
 
-  if (!languages.value.trim()) {
+  if (languagesArray.value.every(language => !language.trim())) {
     errors.languages = "Vui lòng nhập ngôn ngữ lập trình";
     isValid = false;
   }
@@ -379,17 +415,36 @@ const fetchcreate = async () => {
       return;
     }
 
+    // Lọc các giá trị rỗng
+    const filteredBenefits = benefitsArray.value.filter(b => b.trim());
+    const filteredLanguages = languagesArray.value.filter(l => l.trim());
+
+    // Tạo object data trước
+    const jobData = {
+      title: title.value,
+      company: company.value,
+      location: location.value,
+      salary: salary.value,
+      benefits: filteredBenefits,  // Gửi trực tiếp mảng
+      programmingLanguages: filteredLanguages,  // Gửi trực tiếp mảng
+      jobDescription: obDescription.value,
+      jobRequest: jobRequest.value,
+      isUrgent: isUrgent.value
+    };
+
+    // Tạo FormData và thêm file
     const formData = new FormData();
     formData.append("logo", selectedFile.value);
-    formData.append("title", title.value);
-    formData.append("company", company.value);
-    formData.append("location", location.value);
-    formData.append("salary", salary.value);
-    formData.append("benefits", benefits.value);
-    formData.append("jobDescription", obDescription.value);
-    formData.append("jobRequest", jobRequest.value);
-    formData.append("programmingLanguages", languages.value);
-    formData.append("isUrgent", isUrgent.value);
+    
+    // Thêm các trường dữ liệu khác dưới dạng JSON string
+    Object.keys(jobData).forEach(key => {
+      if (key === 'benefits' || key === 'programmingLanguages') {
+        formData.append(key, JSON.stringify(jobData[key]));
+      } else {
+        formData.append(key, jobData[key]);
+      }
+    });
+
     const response = await fetch("http://localhost:3000/api/jobs/create", {
       method: "POST",
       headers: {
@@ -411,6 +466,7 @@ const fetchcreate = async () => {
     loading.value = false;
   }
 };
+
 </script>
 
 <style scoped>
@@ -446,5 +502,90 @@ const fetchcreate = async () => {
 
 .is-invalid {
   border-color: #dc3545;
+}
+.d-flex {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.btn-danger {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
+.mt-2 {
+  margin-top: 0.5rem;
+}
+
+.ml-2 {
+  margin-left: 0.5rem;
+}
+.benefits-container,
+.languages-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.benefit-item,
+.language-item {
+  width: 100%;
+}
+
+.benefit-input-group,
+.language-input-group {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.btn-remove {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 20px;
+}
+
+.btn-add {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 6px 12px;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+.btn-remove:hover {
+  background-color: #c82333;
+}
+.btn-add:hover {
+  background-color: #218838;
+}
+
+.form-control {
+  flex: 1;
 }
 </style>

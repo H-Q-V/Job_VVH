@@ -6,18 +6,21 @@
       </h2>
 
       <div class="welfare-wrap">
-        <div class="row">
-          <div class="welfare-list">
-            <ul>
-              <li v-for="(benefit, index) in jobDetails.benefits" :key="index">
-                <p>
-                  <i class="fa fa-check-circle icn-welfare"></i>{{ benefit }}
-                </p>
-              </li>
-            </ul>
-          </div>
-        </div>
+    <div class="row">
+      <div class="welfare-list">
+        <ul>
+          <li v-for="(benefit, index) in jobDetails.benefits" :key="index">
+            <div class="benefit-item">
+              <i class="fa fa-check-circle"></i>
+              <span>{{ benefit }}</span>
+            </div>
+          </li>
+        </ul>
       </div>
+    </div>
+  </div>
+  
+
 
       <h2 class="widget-title">
         <span>Mô tả công việc</span>
@@ -109,7 +112,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted } from "vue";
 import { useRoute } from "vue-router";
 import { useConfirm } from "primevue/useconfirm";
 import { useToast } from "primevue/usetoast";
@@ -159,12 +162,7 @@ const fetchJobDetails = async (id) => {
   }
 };
 
-const benefitsList = computed(() => {
-  if (typeof jobDetails.value.benefits === "string") {
-    return jobDetails.value.benefits.split(". ");
-  }
-  return [];
-});
+
 
 const handleUpdate = (comment) => {
   data.value = { ...comment };
@@ -250,7 +248,7 @@ const createComment = async () => {
 };
 
 const deleteComment = async (commentId) => {
-  try {
+  try { 
     const response = await fetch(
       `http://localhost:3000/api/comment/delete/${commentId}`,
       {
@@ -357,17 +355,40 @@ const updateComment = async () => {
 .welfare-list ul {
   list-style: none;
   padding: 0;
+  margin: 0;
 }
 
 .welfare-list ul li {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
 }
 
-.welfare-list ul li p {
+/* .welfare-list ul li p {
   display: flex;
   align-items: center;
+} */
+.benefit-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
 }
 
+.benefit-item i {
+  color: #4d6eb7;
+  background-color: #edf5ff;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.benefit-item span {
+  flex: 1;
+  color: #333;
+  font-size: 14px;
+  line-height: 1.5;
+}
 .icn-welfare {
   background-color: #edf5ff;
   color: #4d6eb7;

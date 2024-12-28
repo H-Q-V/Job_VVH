@@ -1,125 +1,3 @@
-<!-- <template>
-  <div class="job-sidebar">
-    <h2 class="widget-title">
-      <span>Ngành Nghề</span>
-    </h2>
-    <div class="job-list">
-      <div class="catelog-list">
-        <ul class="job-list-category" id="jobCategories">
-          <li v-for="category in jobCategories" :key="category.id">
-            <a :href="category.link">
-              <span class="cate-img">
-                <em>{{ category.name }}</em>
-              </span>
-              <span class="cate-count">({{ category.count }})</span>
-            </a>
-          </li>
-        </ul>
-        <div class="readmorestyle-wrap">
-          <a href="#" class="readallstyle reads1" id="readMoreLink" @click.prevent="toggleReadMore">Xem thêm<i class="fa fa-angle-down pl-2"></i></a>
-          <a href="#" class="readallstyle reads1" id="readLessLink" style="display: none;" @click.prevent="toggleReadMore">Rút gọn<i class="fa fa-angle-up pl-2"></i></a>
-        </div>
-      </div>
-    </div>
-        <div class="sb-banner">
-          <img src="@/assets/img/ads1.jpg" class="advertisement">
-        </div>
-      </div>
-    
-
-</template>
-
-<script>
-export default {
-  data() {
-    return {
-      jobCategories: [
-        { id: 1, name: 'Lập trình viên', count: 1100, link: '#' },
-        { id: 2, name: 'Nhân viên kiểm thử', count: 230, link: '#' },
-        { id: 3, name: 'Kỹ sư cầu nối', count: 110, link: '#' },
-        { id: 4, name: 'Designer', count: 2300, link: '#' },
-        { id: 5, name: 'Product Manager', count: 99, link: '#' },
-        { id: 6, name: 'HR', count: 300, link: '#' },
-      ],
-      isExpanded: false,
-    };
-  },
-  methods: {
-    toggleReadMore() {
-      this.isExpanded = !this.isExpanded;
-      const jobList = document.getElementById('jobCategories');
-      const readMoreLink = document.getElementById('readMoreLink');
-      const readLessLink = document.getElementById('readLessLink');
-
-      if (this.isExpanded) {
-        jobList.style.maxHeight = 'none'; 
-        readMoreLink.style.display = 'none'; 
-        readLessLink.style.display = 'inline'; 
-      } else {
-        jobList.style.maxHeight = '150px'; 
-        readMoreLink.style.display = 'inline'; 
-        readLessLink.style.display = 'none'; 
-      }
-    },
-  },
-  mounted() {
-    const jobList = document.getElementById('jobCategories');
-    jobList.style.maxHeight = '150px'; 
-  },
-};
-</script>
-
-<style scoped>
-.job-sidebar {
-  background: #fff;
-  padding: 15px;
-  border-radius: 3px;
-  margin-bottom: 1rem;
-  margin-top: 30px;
-}
-
-.widget-title {
-  margin-bottom: 15px;
-}
-
-.widget-title span {
-  font-family: Roboto, Arial, sans-serif;
-  font-size: 1.2rem;
-  text-transform: uppercase;
-  color: #3a3a3a;
-  font-weight: 500;
-}
-
-.job-list-category {
-  list-style-type: none;
-  padding: 0;
-  overflow: hidden; 
-  transition: max-height 0.3s ease;
-  max-height: 150px;
-}
-
-.job-list-category li {
-  margin-bottom: 10px;
-}
-
-.job-list-category li a {
-  color: #333;
-  font-size: 0.975rem;
-  text-decoration: none;
-  display: flex;
-  justify-content: space-between;
-}
-
-.job-list-category li a:hover {
-  color: #28a745;
-}
-
-.job-category-count {
-  color: #999;
-  font-size: 0.9rem;
-}
-</style> -->
-
 <template>
   <div class="job-sidebar">
     <h2 class="widget-title">
@@ -150,32 +28,54 @@ export default {
     <div class="sb-banner">
       <img src="@/assets/img/ads1.jpg" class="advertisement" />
     </div>
+    <div class="modal" v-if="isModalVisible">
+      <div class="modal-content">
+        <span class="close" @click="closeModal">&times;</span>
+        <h2>{{ selectedLocation.location }}</h2>
+        <p>Số lượng bài tuyển dụng: {{ selectedLocation.count }}</p>
+
+        <!-- Bảng hiển thị danh sách công việc -->
+        <table class="job-table">
+          <thead>
+            <tr>
+              <th>Tên công việc</th>
+              <th>Ngôn ngữ</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="job in jobs" :key="job.id">
+              <td>{{ job.title }}</td>
+              <td>{{ job.programmingLanguages.join(', ') }}</td>
+            </tr>
+            <tr v-if="jobs.length === 0">
+              <td colspan="2" style="text-align: center;">Không có công việc nào.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import axios from "axios";
 import { ref, computed, onMounted } from "vue";
-
 import SlickCarousel from "vue-slick-carousel";
 import "vue-slick-carousel/dist/vue-slick-carousel.css";
+
 export default {
   name: "JobCategories",
   components: {
     SlickCarousel,
   },
-  data() {
-    return {
-      locations: [],
-      displayedCount: 4,
-    };
-  },
   setup() {
     const locations = ref([]);
     const locationContainer = ref(null);
-    const displayedCount = ref(10); // Số lượng hiển thị ban đầu
+    const displayedCount = ref(10); 
+    const isModalVisible = ref(false); 
+    const selectedLocation = ref({});
+    const jobs = ref([]); // Danh sách công việc
 
-    // Computed property để lấy số lượng địa điểm hiển thị
     const displayedLocations = computed(() => {
       return locations.value.slice(0, displayedCount.value);
     });
@@ -191,6 +91,15 @@ export default {
       }
     };
 
+    const fetchJobsByLocation = async (location) => {
+      try {
+        const response = await axios.get(`http://localhost:3000/api/jobs/search?location=${location}`);
+        jobs.value = response.data.data; // Cập nhật danh sách công việc
+      } catch (error) {
+        console.error("Error fetching jobs:", error);
+      }
+    };
+
     const handleScroll = (event) => {
       const element = event.target;
       const nearBottom =
@@ -202,12 +111,18 @@ export default {
     };
 
     const loadMore = () => {
-      displayedCount.value += 3; // Load thêm 3 địa điểm mỗi lần scroll
+      displayedCount.value += 3; 
     };
 
     const selectLocation = (location) => {
-      console.log("Selected location:", location);
-      // Thêm logic xử lý khi chọn địa điểm
+      selectedLocation.value = location; 
+      isModalVisible.value = true; 
+      fetchJobsByLocation(location.location); // Gọi hàm để fetch jobs ở đây
+    };
+
+    const closeModal = () => {
+      isModalVisible.value = false; 
+      jobs.value = []; // Xóa danh sách công việc khi đóng modal
     };
 
     onMounted(() => {
@@ -219,13 +134,18 @@ export default {
       locationContainer,
       selectLocation,
       handleScroll,
+      isModalVisible,
+      selectedLocation,
+      closeModal,
+      jobs, // Trả về danh sách công việc
     };
   },
 };
 </script>
 
+
+
 <style scoped>
-/* Giữ nguyên CSS cũ */
 .job-sidebar {
   background: #fff;
   padding: 15px;
@@ -320,5 +240,80 @@ export default {
   width: 100%;
   margin-top: 20px;
   border-radius: 3px;
+}
+
+/* Styles for modal */
+.modal {
+  display: flex;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgba(0, 0, 0, 0.7); /* Màu nền tối hơn */
+}
+
+.modal-content {
+  background-color: #ffffff; /* Màu nền trắng */
+  margin: 10% auto;
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%;
+  border-radius: 10px; /* Bo góc cho modal */
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Hiệu ứng bóng */
+  transform: translateZ(0); /* Tạo hiệu ứng 3D */
+  transition: transform 0.3s ease; /* Hiệu ứng chuyển động */
+}
+
+.modal-content h2 {
+  color: #007bff; /* Màu chữ xanh biển */
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2); /* Hiệu ứng bóng cho chữ */
+}
+
+.modal-content p {
+  color: #333; /* Màu chữ tối */
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: #1a73e8; /* Màu chữ khi hover */
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* Styles for job table */
+.job-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.job-table th,
+.job-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.job-table th {
+  background-color: #007bff;
+  color: white;
+}
+
+.job-table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+.job-table tr:hover {
+  background-color: #ddd;
 }
 </style>

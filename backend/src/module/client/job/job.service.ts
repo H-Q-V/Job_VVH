@@ -10,7 +10,14 @@ export class JobService {
     @InjectModel(Job.name) private jobModel: Model<Job>,
     @InjectModel(Coin.name) private coinModel: Model<Coin>,
   ) {}
-
+  async createJobAdmin(jobDto: JobDto ): Promise<Job> {
+    console.log("aaaaa",JobDto )
+    const data = await this.jobModel.create(jobDto);
+    if (!data) {
+      throw new NotFoundException('Failed to create job');
+    }
+    return data;
+  }
   async create(jobDto: JobDto, user: any): Promise<Job> {
     const userId = await this.coinModel.findOne({ User: user.id });
     if (!userId || Number(userId.coins) < 2000) {
@@ -43,15 +50,17 @@ export class JobService {
   }
 
   async delete(id: string): Promise<boolean> {
-    const data = await this.jobModel.findOne({
-      _id: id,
-    });
+    if (!id) {
+        throw new NotFoundException('Job ID is required');
+    }
+
+    const data = await this.jobModel.findOne({ _id: id });
     if (!data) {
-      throw new NotFoundException('Job not found');
+        throw new NotFoundException('Job not found');
     }
     await this.jobModel.deleteOne({ _id: id });
     return true;
-  }
+}
 
   async getJobs(): Promise<Job[]> {
     const data = await this.jobModel.find().exec();
