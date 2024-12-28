@@ -5,7 +5,6 @@ import {
   IsPhoneNumber,
   IsString,
 } from 'class-validator';
-
 export class ApplyDto {
   @IsString()
   @IsNotEmpty()
@@ -17,6 +16,78 @@ export class ApplyDto {
 
   @IsPhoneNumber('VN') // Giả sử bạn đang làm việc với số điện thoại Việt Nam
   @IsNotEmpty()
+  phone: string;
+
+  @IsString()
+  @IsNotEmpty()
+  gender?: string;
+
+  @IsString()
+  @IsNotEmpty()
+  date_of_birth: string;
+
+  @IsString()
+  @IsNotEmpty()
+  marriage?: string;
+
+  @IsString()
+  @IsNotEmpty()
+  province?: string;
+
+  @IsString()
+  @IsNotEmpty()
+  residence?: string;
+
+  @IsString()
+  @IsNotEmpty()
+  file?: string[];
+  // @IsOptional()
+  // @IsArray()
+  // fileUrls?: string[];
+
+  @IsString()
+  @IsNotEmpty()
+  title: string;
+
+  @IsString()
+  @IsNotEmpty()
+  qualification?: string;
+
+  @IsString()
+  @IsNotEmpty()
+  experience?: string;
+
+  @IsString()
+  @IsNotEmpty()
+  current_position?: string;
+
+  @IsString()
+  @IsNotEmpty()
+  desired_position?: string;
+
+  @IsString()
+  @IsNotEmpty()
+  desired_job?: string;
+
+  @IsString()
+  @IsNotEmpty()
+  salary?: string;
+
+  @IsString()
+  @IsNotEmpty()
+  workplace?: string;
+}
+
+export class ApplAdminDto {
+  @IsString()
+  @IsNotEmpty()
+  userid: string = 'admin';
+
+  @IsString()
+  @IsNotEmpty()
+  fullname: string;
+
+  @IsPhoneNumber('VN')
   phone: string;
 
   @IsString()

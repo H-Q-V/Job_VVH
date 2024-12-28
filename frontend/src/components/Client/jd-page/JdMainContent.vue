@@ -60,7 +60,8 @@
             <span class="comment-time">• {{ comment.create_at }}</span>
           </div>
 
-          <div class="comment-actions">
+          <div class="comment-actions" v-if="comment.userid === userId">
+            <!-- Thêm điều kiện ở đây -->
             <div class="menu-wrapper" v-if="menuVisible[comment._id]">
               <div class="menu-list">
                 <div class="menu-item" @click="handleUpdate(comment)">
@@ -79,12 +80,15 @@
             </button>
           </div>
         </div>
+
         <div class="comment-content">
           <p>{{ comment.comments }}</p>
         </div>
       </div>
     </div>
   </div>
+  <!-- Thay thế phần input comment hiện tại -->
+
   <!-- <ConfirmPopup></ConfirmPopup> -->
   <Dialog
     v-model:visible="display"
@@ -127,6 +131,8 @@ const display = ref(false);
 const data = ref({});
 const token = ref(localStorage.getItem("token"));
 const confirmPopup = useConfirm();
+// Thêm vào phần refs của bạn
+const userId = ref(localStorage.getItem("userId"));
 
 const toggleMenu = (commentId) => {
   const isCurrentlyVisible = menuVisible.value[commentId];
@@ -464,6 +470,20 @@ const updateComment = async () => {
   padding: 12px;
   background: #f8f9fa;
   border-radius: 8px;
+}
+
+.user-comment {
+  margin-bottom: 16px; /* Thêm khoảng cách giữa các comment */
+  padding: 12px;
+  background: white;
+  border-radius: 8px;
+  /* Có thể thêm box-shadow nếu muốn */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Đảm bảo comment cuối cùng không có margin-bottom */
+.user-comment:last-child {
+  margin-bottom: 0;
 }
 
 .action-btn {

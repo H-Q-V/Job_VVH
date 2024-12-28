@@ -174,12 +174,14 @@ const openNew = () => {
                 {{ slotProps.data._id }}
             </template>
         </Column>
+
         <Column field="name" header="Name" :sortable="true" headerStyle="width:14%; min-width:10rem;">
             <template #body="slotProps">
                 <span class="p-column-title">Name</span>
                 {{ slotProps.data.name }}
             </template>
         </Column>
+
         <Column headerStyle="min-width:10rem;">
             <template #body="slotProps">
                 <Button icon="pi pi-pencil" class="mr-2" severity="success" rounded @click="open(slotProps.data)" />

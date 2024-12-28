@@ -95,6 +95,7 @@ const register = async () => {
     status.value = !status.value;
     localStorage.setItem("token", postUser.data.data.token);
     localStorage.setItem("name", postUser.data.data.user.name);
+    localStorage.setItem("userId", postUser.data.data.user.id);
     router.push({ name: "home" });
   }
 };

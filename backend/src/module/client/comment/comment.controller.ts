@@ -32,8 +32,12 @@ export class CommentController {
 
   @Put('/update/:id')
   @UseGuards(AuthGuard(), CreatorGuard)
-  async updateComment(@Param('id') id: string, @Body() updateDto: UpdateDto) {
-    const data = await this.commentService.update(id, updateDto);
+  async updateComment(
+    @Param('id') id: string,
+    @Body() updateDto: UpdateDto,
+    @Request() req: any,
+  ) {
+    const data = await this.commentService.update(id, updateDto, req.creator);
     return {
       success: true,
       code: 200,
@@ -44,8 +48,8 @@ export class CommentController {
 
   @Delete('/delete/:id')
   @UseGuards(AuthGuard(), CreatorGuard)
-  async deleteComment(@Param('id') id: string) {
-    await this.commentService.delete(id);
+  async deleteComment(@Param('id') id: string, @Request() req: any) {
+    await this.commentService.delete(id, req.creator);
     return {
       success: true,
       code: 200,

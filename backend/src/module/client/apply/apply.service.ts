@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Apply } from 'src/schema/apply.schema';
-import { ApplyDto, UpdateApplyDto } from './apply.dto';
+import { ApplyDto, UpdateApplyDto, ApplAdminDto } from './apply.dto';
 
 @Injectable()
 export class ApplyService {
@@ -13,6 +13,18 @@ export class ApplyService {
     console.log('a', applyDto);
 
     const data = await this.applyModel.create(applyDto);
+    if (!data) {
+      throw new NotFoundException('Failed to create apply');
+    }
+    return data;
+  }
+
+  async createAdmin(applyDto: ApplAdminDto): Promise<Apply> {
+    const adminData = {
+      ...applyDto,
+      userid: 'admin',
+    };
+    const data = await this.applyModel.create(adminData);
     if (!data) {
       throw new NotFoundException('Failed to create apply');
     }
