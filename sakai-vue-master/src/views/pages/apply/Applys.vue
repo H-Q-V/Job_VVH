@@ -219,11 +219,18 @@
             <Textarea id="residence" v-model.trim="apply.residence" required="true" autofocus :invalid="submitted && !!apply.residence" rows="4" />
             <small class="p-invalid" v-if="submitted && !apply.residence">Job Description is required.</small>
         </div>
-        <div class="field" field="_id">
-            <label for="file">File</label>
-            <Textarea id="file" v-model.trim="apply.file" required="true" autofocus :invalid="submitted && !!apply.file" rows="4" />
-            <small class="p-invalid" v-if="submitted && !apply.file">Job Request is required.</small>
+
+        <div class="field">
+            <label for="file">File Upload</label>
+            <div id="drop-area" :class="{ 'is-invalid': submitted && !selectedFile }">
+                <input type="file" id="fileElem" accept=".pdf,.doc,.docx" @change="handleFiles($event.target.files)" />
+                <label style="cursor: pointer" for="fileElem"> Upload CV file or drag & drop here </label>
+                <progress id="progress-bar" max="100" :value="uploadProgress" v-show="uploadProgress > 0 && uploadProgress < 100"></progress>
+                <div v-if="selectedFile" class="selected-file">Selected file: {{ selectedFile.name }}</div>
+            </div>
+            <small class="p-invalid" v-if="submitted && !selectedFile"> File is required. </small>
         </div>
+
         <div class="field" field="_id">
             <label for="title">Title</label>
             <Textarea id="title" v-model.trim="apply.title" required="true" autofocus :invalid="submitted && !!apply.title" rows="4" />
@@ -300,9 +307,19 @@
             <label for="residence">Residence</label>
             <InputText id="residence" v-model.trim="apply.residence" required autofocus />
         </div>
-        <div class="field">
+        <!-- <div class="field">
             <label for="file">File</label>
             <InputText id="file" v-model.trim="apply.file" required autofocus />
+        </div> -->
+        <div class="field">
+            <label for="file">File Upload</label>
+            <div id="drop-area" :class="{ 'is-invalid': submitted && !selectedFile && !apply.file }">
+                <input type="file" id="fileElemUpdate" accept=".pdf,.doc,.docx" @change="handleFiles($event.target.files)" />
+                <label style="cursor: pointer" for="fileElemUpdate"> Upload new CV file or drag & drop here </label>
+                <progress id="progress-bar" max="100" :value="uploadProgress" v-show="uploadProgress > 0 && uploadProgress < 100"></progress>
+                <div v-if="selectedFile" class="selected-file">New file selected: {{ selectedFile.name }}</div>
+                <div v-else-if="apply.file" class="current-file">Current file: {{ getFileName(apply.file) }}</div>
+            </div>
         </div>
         <div class="field">
             <label for="title">Title</label>
@@ -358,7 +375,8 @@ const submitted = ref(false);
 const display = ref(false);
 const toast = useToast();
 const confirmPopup = useConfirm();
-
+const uploadProgress = ref(0);
+const selectedFile = ref(null);
 const open = (editApply) => {
     apply.value = { ...editApply };
     display.value = true;
@@ -397,7 +415,7 @@ onMounted(async () => {
 
 const createApply = async () => {
     try {
-        const response = await fetch('http://localhost:3000/api/apply/create', {
+        const response = await fetch('http://localhost:3000/api/apply/createAdmin', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -406,7 +424,7 @@ const createApply = async () => {
         });
         const data = await response.json();
         if (response.ok) {
-            applyItems.value.push(data);
+            applyItems.value.push(data.data);
             applyDialog.value = false;
         } else {
             console.error(data);
@@ -426,10 +444,11 @@ const updateApply = async () => {
             body: JSON.stringify(apply.value)
         });
         const data = await response.json();
+        console.log('Response from API:', data);
         if (response.ok) {
             const index = applyItems.value.findIndex((item) => item._id === apply.value._id);
             if (index !== -1) {
-                applyItems.value[index] = data;
+                applyItems.value[index] = { ...apply.value };
             }
             display.value = false;
             toast.add({ severity: 'success', summary: 'Success', detail: 'Menu updated successfully', life: 3000 });
@@ -440,6 +459,21 @@ const updateApply = async () => {
     } catch (error) {
         console.log(error);
         toast.add({ severity: 'error', summary: 'Error', detail: 'Failed to connect to server', life: 3000 });
+    }
+};
+
+const handleFiles = (files) => {
+    if (files && files[0]) {
+        selectedFile.value = files[0];
+        uploadProgress.value = 0;
+        apply.value.file = selectedFile.value.name;
+        const interval = setInterval(() => {
+            if (uploadProgress.value < 100) {
+                uploadProgress.value += 10;
+            } else {
+                clearInterval(interval);
+            }
+        }, 100);
     }
 };
 
@@ -482,5 +516,51 @@ const getFileName = (fileString) => {
     margin-bottom: 0.5rem;
     color: #495057;
     word-break: break-all;
+}
+#drop-area {
+    border: 2px dashed #ccc;
+    border-radius: 4px;
+    padding: 20px;
+    text-align: center;
+    margin-top: 5px;
+
+    &.is-invalid {
+        border-color: #dc3545;
+    }
+
+    input[type='file'] {
+        display: none;
+    }
+
+    label {
+        display: block;
+        padding: 10px;
+        background-color: #f8f9fa;
+        border-radius: 4px;
+        margin-bottom: 10px;
+
+        &:hover {
+            background-color: #e9ecef;
+        }
+    }
+}
+
+#progress-bar {
+    width: 100%;
+    height: 10px;
+    margin: 10px 0;
+}
+
+.selected-file,
+.current-file {
+    margin-top: 10px;
+    padding: 8px;
+    background-color: #e9ecef;
+    border-radius: 4px;
+    word-break: break-all;
+}
+
+.current-file {
+    background-color: #d4edda;
 }
 </style>

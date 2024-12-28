@@ -16,18 +16,14 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import { CreatorGuard } from 'src/auth/creator.guard';
 import { ApplyService } from './apply.service';
-import { ApplyDto, UpdateApplyDto } from './apply.dto';
+import { ApplAdminDto, ApplyDto, UpdateApplyDto } from './apply.dto';
 import { Code } from 'mongodb';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
-// import { UploadService } from '../../../common/services/upload/upload.service';
 
 @Controller('apply')
 export class ApplyController {
-  constructor(
-    private applyService: ApplyService,
-    // private readonly uploadService: UploadService,
-  ) {}
+  constructor(private applyService: ApplyService) {}
 
   @Post('/create')
   @UseGuards(AuthGuard(), CreatorGuard)
@@ -47,66 +43,20 @@ export class ApplyController {
     };
   }
 
-  // @Post('upload')
-  // @UseGuards(AuthGuard('jwt'))
-  // @UseInterceptors(FilesInterceptor('file'))
-  // async uploadFile(@UploadedFiles() file: Express.Multer.File) {
-  //   try {
-  //     const result = await this.cloudinaryService.uploadFile(file);
-  //     return { url: result.secure_url, name: file.originalname };
-  //   } catch (error) {
-  //     throw new Error('Upload failed');
-  //   }
-  // }
-
-  // Upload file endpoint
-  // @Post('upload')
-  // @UseInterceptors(FileInterceptor('file'))
-  // async uploadFile(@UploadedFile() file: Express.Multer.File) {
-  //   try {
-  //     const fileName = await this.uploadService.saveFile(file);
-  //     return {
-  //       success: true,
-  //       filename: fileName,
-  //     };
-  //   } catch (error) {
-  //     return {
-  //       success: false,
-  //       message: 'Upload failed',
-  //     };
-  //   }
-  // }
-
-  // // Download file endpoint
-  // @Get('file/:filename')
-  // async downloadFile(
-  //   @Param('filename') filename: string,
-  //   @Res() res: Response,
-  // ) {
-  //   try {
-  //     const filePath = this.uploadService.getFilePath(filename);
-  //     return res.download(filePath);
-  //   } catch (error) {
-  //     return res.status(404).json({
-  //       success: false,
-  //       message: 'File not found',
-  //     });
-  //   }
-  // }
-
-  // // View file endpoint
-  // @Get('view/:filename')
-  // async viewFile(@Param('filename') filename: string, @Res() res: Response) {
-  //   try {
-  //     const filePath = this.uploadService.getFilePath(filename);
-  //     return res.sendFile(filePath, { root: '.' });
-  //   } catch (error) {
-  //     return res.status(404).json({
-  //       success: false,
-  //       message: 'File not found',
-  //     });
-  //   }
-  // }
+  @Post('/createAdmin')
+  async createApplyAdmin(@Body() applyDto: ApplAdminDto) {
+    const adminApplyDto = {
+      ...applyDto,
+      userid: 'admin',
+    };
+    const data = await this.applyService.createAdmin(adminApplyDto);
+    return {
+      success: true,
+      code: 200,
+      message: 'Create apply successfully',
+      data: data,
+    };
+  }
 
   @Put('/update/:id')
   async updateApply(

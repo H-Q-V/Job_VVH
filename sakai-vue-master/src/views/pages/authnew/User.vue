@@ -33,7 +33,7 @@ const createUser = async () => {
         });
         const data = await response.json();
         if (response.ok) {
-            menuItems.value.push(data);
+            menuItems.value.push(data.data);
             menuDialog.value = false;
             toast.add({ severity: 'success', summary: 'Success', detail: 'User created successfully', life: 3000 });
         }
@@ -56,6 +56,7 @@ const updateUser = async () => {
         if (response.ok) {
             const index = menuItems.value.findIndex((item) => item._id === product.value._id);
             if (index !== -1) {
+                menuItems.value[index] = { ...data.data };
                 display.value = false;
                 toast.add({ severity: 'success', summary: 'Success', detail: 'User update successfully', life: 3000 });
             } else {
@@ -163,12 +164,14 @@ const confirm = (event, product) => {
                 {{ slotProps.data.email }}
             </template>
         </Column>
+
         <Column field="password" header="Password" :sortable="true" headerStyle="width:14%; min-width:10rem;">
             <template #body="slotProps">
                 <span class="p-column-title">Password</span>
-                {{ slotProps.data.password }}
+                <span class="no-copy">{{ slotProps.data.password }}</span>
             </template>
         </Column>
+
         <Column field="role" header="Role" :sortable="true" headerStyle="width:14%; min-width:10rem;">
             <template #body="slotProps">
                 <span class="p-column-title">Role</span>
@@ -231,4 +234,11 @@ const confirm = (event, product) => {
 
     <ConfirmPopup></ConfirmPopup>
 </template>
-<style scoped></style>
+<style scoped>
+.no-copy {
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+    cursor: default;
+}
+</style>

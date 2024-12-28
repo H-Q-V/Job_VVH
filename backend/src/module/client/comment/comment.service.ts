@@ -23,7 +23,15 @@ export class CommentService {
     return data;
   }
 
-  async update(id: string, updateDto: UpdateDto): Promise<Comment> {
+  async update(id: string, updateDto: UpdateDto, user: any): Promise<Comment> {
+    const comment = await this.commentModel.findOne({
+      _id: id,
+      userid: user.id,
+    });
+
+    if (!comment) {
+      throw new NotFoundException('Không tìm thấy');
+    }
     const updatedComment = await this.commentModel.findByIdAndUpdate(
       id,
       updateDto,
@@ -32,19 +40,24 @@ export class CommentService {
     return updatedComment;
   }
 
-  async delete(id: string) {
-    const data = await this.commentModel.findOne({ _id: id });
+  async delete(id: string, user: any) {
+    const data = await this.commentModel.findOne({ _id: id, userid: user.id });
     if (!data) {
       throw new NotFoundException('comment not found');
     }
     await this.commentModel.deleteOne({
       _id: id,
+      userid: user.id,
     });
     return true;
   }
 
   async getAll() {
-    const data = await this.commentModel.find();
+    const data = await this.commentModel
+      .find()
+      .collation({ locale: 'en' })
+      .sort({ create_at: -1 })
+      .exec();
     return data;
   }
 }
