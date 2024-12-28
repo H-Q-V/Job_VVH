@@ -21,13 +21,38 @@ import { AuthGuard } from '@nestjs/passport';
 import { CreatorGuard } from 'src/auth/creator.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CloudinaryService } from '../../../common/services/cloudinary.service';
+
 @Controller('jobs')
 export class JobController {
   constructor(
     private jobService: JobService,
     private readonly cloudinaryService: CloudinaryService,
   ) {}
-
+ @Post('/admin/create') 
+ @UseInterceptors(FileInterceptor('logo'))
+ async createJobAdmin(
+     @Body() jobDto: JobDto,
+     @UploadedFile() file: Express.Multer.File,
+ ) {
+     let logoUrl;
+     if (file) {
+         const result = await this.cloudinaryService.uploadFile(file);
+         logoUrl = result.secure_url;
+     } else {
+         throw new NotFoundException('Logo file is required'); 
+     }
+     const parsedJobDto = {
+         ...jobDto,
+         logo: logoUrl,
+     };
+    const data = await this.jobService.createJobAdmin(parsedJobDto)
+    return {
+      success:true,
+      code:200,
+      message:"Create job successfully ",
+data
+    } 
+ }
   @Post('/create')
   @UseGuards(AuthGuard(), CreatorGuard)
   @UseInterceptors(FileInterceptor('logo'))
@@ -42,13 +67,15 @@ export class JobController {
       logoUrl = result.secure_url;
       console.log('Upload result:', result); // Thêm log để debug
     }
-    const data = await this.jobService.create(
-      {
-        ...jobDto,
-        logo: logoUrl,
-      },
-      req.creator,
-    );
+    const parsedJobDto = {
+      ...jobDto,
+      benefits: typeof jobDto.benefits === 'string' ? JSON.parse(jobDto.benefits) : jobDto.benefits,
+      programmingLanguages: typeof jobDto.programmingLanguages === 'string' ? JSON.parse(jobDto.programmingLanguages) : jobDto.programmingLanguages,
+      logo: logoUrl,
+    };
+  
+    const data = await this.jobService.create(parsedJobDto, req.creator);
+
     return {
       success: true,
       code: 200,
@@ -69,6 +96,17 @@ export class JobController {
     };
   }
 
+  @Put('/admin/update/:id')
+  @UsePipes(new ValidationPipe())
+  async updateAdmin(@Param('id') id: string, @Body() jobDto: JobDto) {
+    const data = await this.jobService.update(id, jobDto);
+    return {
+      success: true,
+      code: 200,
+      message: 'Update job successfully',
+      data,
+    };
+  }
   @Delete('/delete/:id')
   @UsePipes(new ValidationPipe())
   async delete(@Param('id') id: string) {
@@ -126,7 +164,7 @@ export class JobController {
       data: jobs,
     };
   }
-  @Get('locations')
+  @Get('/locations')
   async getLocationsWithCount() {
     const locations = await this.jobService.getLocationsWithCount();
     return {

@@ -16,7 +16,7 @@ export class CloudinaryService {
 
       const uploadStream = cloudinary.uploader.upload_stream(
         {
-          folder: 'job_logos',
+          folder: 'job_logo',
         },
         (error, result) => {
           if (error) {

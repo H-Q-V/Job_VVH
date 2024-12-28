@@ -38,13 +38,12 @@
                 </ul>
               </div>
               <div class="job-detail-header-tag">
-                <ul>
-                  <li><a href="#">Java</a></li>
-                  <li><a href="#">.NET</a></li>
-                  <li><a href="#">SQL</a></li>
-                  <li><a href="#">C#</a></li>
-                </ul>
-              </div>
+    <ul>
+      <li v-for="(language, index) in jobDetails.programmingLanguages" :key="index">
+        <a href="#">{{ language }}</a>
+      </li>
+    </ul>
+  </div>
             </div>
           </div>
           <div class="col-md-3 col-sm-12 col-12">
@@ -64,12 +63,18 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted,computed } from "vue";
 import { useRoute } from "vue-router";
 
 const route = useRoute();
 const jobDetails = ref({});
 
+const programmingLanguages = computed(() => {
+  if (!jobDetails.value.programmingLanguages) return [];
+  return Array.isArray(jobDetails.value.programmingLanguages) 
+    ? jobDetails.value.programmingLanguages 
+    : JSON.parse(jobDetails.value.programmingLanguages);
+});
 const fetchJobDetails = async (id) => {
   try {
     const res = await fetch(`http://localhost:3000/api/jobs/${id}`);
@@ -136,6 +141,9 @@ onMounted(() => {
 .job-detail-header-tag ul {
   list-style: none;
   padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
 }
 
 .job-detail-header-tag ul li {
@@ -144,10 +152,11 @@ onMounted(() => {
 }
 
 .job-detail-header-tag ul li a {
+  display: inline-block;
+  padding: 5px 15px;
   background-color: #edf5ff;
   color: #4d6eb7;
-  padding: 5px 10px;
-  border-radius: 3px;
+  border-radius: 5px;
   text-decoration: none;
   font-size: 14px;
 }
