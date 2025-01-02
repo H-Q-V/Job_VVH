@@ -14,7 +14,7 @@ import Payment from "../views/Payment.vue";
 import Apply from "../views/Apply.vue";
 import Story from "@/components/Client/Story/Story.vue";
 const router = createRouter({
-  history: createWebHistory(import.meta.env.BASE_URL),
+  history: createWebHistory(),
   routes: [
     {
       path: "/",
