@@ -89,8 +89,8 @@ const fetchJobDetails = async (id) => {
   }
 };
 
-onMounted(() => {
-  fetchJobDetails(route.params.id);
+onMounted(async () => {
+  await fetchJobDetails(route.params.id);
 });
 </script>
 
