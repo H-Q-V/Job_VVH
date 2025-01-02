@@ -25,7 +25,6 @@ const router = createRouter({
       path: "/job/:id",
       name: "jd-page",
       component: JdPage,
-      props: true,
     },
     {
       path: "/accuracy",
