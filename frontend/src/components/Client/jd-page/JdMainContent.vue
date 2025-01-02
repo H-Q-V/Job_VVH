@@ -6,21 +6,19 @@
       </h2>
 
       <div class="welfare-wrap">
-    <div class="row">
-      <div class="welfare-list">
-        <ul>
-          <li v-for="(benefit, index) in jobDetails.benefits" :key="index">
-            <div class="benefit-item">
-              <i class="fa fa-check-circle"></i>
-              <span>{{ benefit }}</span>
-            </div>
-          </li>
-        </ul>
+        <div class="row">
+          <div class="welfare-list">
+            <ul>
+              <li v-for="(benefit, index) in jobDetails.benefits" :key="index">
+                <div class="benefit-item">
+                  <i class="fa fa-check-circle"></i>
+                  <span>{{ benefit }}</span>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-  
-
 
       <h2 class="widget-title">
         <span>Mô tả công việc</span>
@@ -150,7 +148,7 @@ const closeAllMenus = () => {
 
 const fetchJobDetails = async (id) => {
   try {
-    const res = await fetch(`http://localhost:3000/api/jobs/${id}`);
+    const res = await fetch(`https://job-api.mrun.site/api/jobs/${id}`);
     if (!res.ok) {
       throw new Error("Failed to fetch job details");
     }
@@ -161,8 +159,6 @@ const fetchJobDetails = async (id) => {
     error.value = err.message;
   }
 };
-
-
 
 const handleUpdate = (comment) => {
   data.value = { ...comment };
@@ -193,7 +189,7 @@ onMounted(() => {
 
   const fetchComments = async () => {
     try {
-      const res = await fetch("http://localhost:3000/api/comment/getAll");
+      const res = await fetch("https://job-api.mrun.site/api/comment/getAll");
       const data = await res.json();
       commentItem.value = data.data;
     } catch (error) {
@@ -206,14 +202,17 @@ onMounted(() => {
 
 const createComment = async () => {
   try {
-    const response = await fetch("http://localhost:3000/api/comment/create", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token.value}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ comments: comments.value }),
-    });
+    const response = await fetch(
+      "https://job-api.mrun.site/api/comment/create",
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token.value}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ comments: comments.value }),
+      }
+    );
     const data = await response.json();
     if (response.ok) {
       // Thêm comment mới vào mảng commentItem.value
@@ -248,9 +247,9 @@ const createComment = async () => {
 };
 
 const deleteComment = async (commentId) => {
-  try { 
+  try {
     const response = await fetch(
-      `http://localhost:3000/api/comment/delete/${commentId}`,
+      `https://job-api.mrun.site/api/comment/delete/${commentId}`,
       {
         method: "DELETE",
         headers: {
@@ -275,7 +274,7 @@ const updateComment = async () => {
   console.log("Data sent to API:", data.value._id);
   try {
     const response = await fetch(
-      `http://localhost:3000/api/comment/update/${data.value._id}`,
+      `https://job-api.mrun.site/api/comment/update/${data.value._id}`,
       {
         method: "PUT",
         headers: {

@@ -404,7 +404,7 @@ const openNew = () => {
 
 onMounted(async () => {
     try {
-        const res = await fetch('http://localhost:3000/api/apply/getAll');
+        const res = await fetch('https://job-api.mrun.site/api/apply/getAll');
         const data = await res.json();
         applyItems.value = data.data;
         console.log('a', applyItems.value);
@@ -415,7 +415,7 @@ onMounted(async () => {
 
 const createApply = async () => {
     try {
-        const response = await fetch('http://localhost:3000/api/apply/createAdmin', {
+        const response = await fetch('https://job-api.mrun.site/api/apply/createAdmin', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -436,7 +436,7 @@ const createApply = async () => {
 
 const updateApply = async () => {
     try {
-        const response = await fetch(`http://localhost:3000/api/apply/update/${apply.value._id}`, {
+        const response = await fetch(`https://job-api.mrun.site/api/apply/update/${apply.value._id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -479,7 +479,7 @@ const handleFiles = (files) => {
 
 const deleteApply = async (applyId) => {
     try {
-        const response = await fetch(`http://localhost:3000/api/apply/delete/${applyId}`, {
+        const response = await fetch(`https://job-api.mrun.site/api/apply/delete/${applyId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'

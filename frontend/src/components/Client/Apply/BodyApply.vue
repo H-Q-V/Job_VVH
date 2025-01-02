@@ -752,7 +752,7 @@ const submitForm = async () => {
       workplace: workplace.value,
     };
 
-    const response = await fetch("http://localhost:3000/api/apply/create", {
+    const response = await fetch("https://job-api.mrun.site/api/apply/create", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token.value}`,

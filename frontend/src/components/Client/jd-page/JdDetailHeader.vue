@@ -38,12 +38,15 @@
                 </ul>
               </div>
               <div class="job-detail-header-tag">
-    <ul>
-      <li v-for="(language, index) in jobDetails.programmingLanguages" :key="index">
-        <a href="#">{{ language }}</a>
-      </li>
-    </ul>
-  </div>
+                <ul>
+                  <li
+                    v-for="(language, index) in jobDetails.programmingLanguages"
+                    :key="index"
+                  >
+                    <a href="#">{{ language }}</a>
+                  </li>
+                </ul>
+              </div>
             </div>
           </div>
           <div class="col-md-3 col-sm-12 col-12">
@@ -63,7 +66,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted,computed } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useRoute } from "vue-router";
 
 const route = useRoute();
@@ -71,13 +74,13 @@ const jobDetails = ref({});
 
 const programmingLanguages = computed(() => {
   if (!jobDetails.value.programmingLanguages) return [];
-  return Array.isArray(jobDetails.value.programmingLanguages) 
-    ? jobDetails.value.programmingLanguages 
+  return Array.isArray(jobDetails.value.programmingLanguages)
+    ? jobDetails.value.programmingLanguages
     : JSON.parse(jobDetails.value.programmingLanguages);
 });
 const fetchJobDetails = async (id) => {
   try {
-    const res = await fetch(`http://localhost:3000/api/jobs/${id}`);
+    const res = await fetch(`https://job-api.mrun.site/api/jobs/${id}`);
     const data = await res.json();
     jobDetails.value = data.data;
     console.log("Job details:", jobDetails.value);

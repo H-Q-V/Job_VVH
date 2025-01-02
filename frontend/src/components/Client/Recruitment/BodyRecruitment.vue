@@ -75,19 +75,23 @@
             </div>
           </div>
           <div class="form-group row">
-          <label class="col-sm-3 col-form-label text-right label">Location<span style="color: red" class="pl-2">*</span></label>
+            <label class="col-sm-3 col-form-label text-right label"
+              >Location<span style="color: red" class="pl-2">*</span></label
+            >
             <div class="col-sm-9">
-      <!-- Thay thế textarea bằng select -->
-            <select v-model="location" class="form-control">
-              <option value="">Chọn địa điểm</option>
-              <option v-for="province in provinces" 
-                :key="province.code" 
-                :value="province.name">
-            {{ province.name }}
-          </option>
-        </select>
-      </div>
-     </div>
+              <!-- Thay thế textarea bằng select -->
+              <select v-model="location" class="form-control">
+                <option value="">Chọn địa điểm</option>
+                <option
+                  v-for="province in provinces"
+                  :key="province.code"
+                  :value="province.name"
+                >
+                  {{ province.name }}
+                </option>
+              </select>
+            </div>
+          </div>
           <div class="form-group row">
             <label class="col-sm-3 col-form-label text-right label"
               >Salary<span style="color: red" class="pl-2">*</span></label
@@ -145,86 +149,106 @@
               </div>
             </div>
           </div>
-         <!-- Phần Benefits -->
-  <div class="form-group row">
-    <label class="col-sm-3 col-form-label text-right label">Benefits<span style="color: red" class="pl-2">*</span></label>
-    <div class="col-sm-9">
-      <div class="benefits-container">
-        <div v-for="(benefit, index) in benefitsArray" :key="index" class="benefit-item">
-          <div class="benefit-input-group">
-            <input 
-              v-model="benefitsArray[index]" 
-              type="text" 
-              class="form-control"
-              placeholder="Nhập lợi ích"
-            />
-            <button @click="removeBenefit(index)" class="btn-remove">×</button>
-          </div>
-        </div>
-        <button @click="addBenefit" class="btn-add">+ Thêm lợi ích</button>
-      </div>
-    </div>
-          </div>
-        </div>
+          <!-- Phần Benefits -->
           <div class="form-group row">
             <label class="col-sm-3 col-form-label text-right label"
-              >Job Description<span style="color: red" class="pl-2"
-                >*</span
-              ></label
+              >Benefits<span style="color: red" class="pl-2">*</span></label
             >
             <div class="col-sm-9">
-              <textarea
-                v-model="obDescription"
-                type="text"
-                class="form-control"
-                placeholder="Nhập mô tả công việc"
-                rows="5"
-                :class="{ 'is-invalid': errors.obDescription }"
-              ></textarea>
-              <div v-if="errors.obDescription" class="invalid-feedback">
-                {{ errors.obDescription }}
+              <div class="benefits-container">
+                <div
+                  v-for="(benefit, index) in benefitsArray"
+                  :key="index"
+                  class="benefit-item"
+                >
+                  <div class="benefit-input-group">
+                    <input
+                      v-model="benefitsArray[index]"
+                      type="text"
+                      class="form-control"
+                      placeholder="Nhập lợi ích"
+                    />
+                    <button @click="removeBenefit(index)" class="btn-remove">
+                      ×
+                    </button>
+                  </div>
+                </div>
+                <button @click="addBenefit" class="btn-add">
+                  + Thêm lợi ích
+                </button>
               </div>
             </div>
           </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label text-right label"
+            >Job Description<span style="color: red" class="pl-2"
+              >*</span
+            ></label
+          >
+          <div class="col-sm-9">
+            <textarea
+              v-model="obDescription"
+              type="text"
+              class="form-control"
+              placeholder="Nhập mô tả công việc"
+              rows="5"
+              :class="{ 'is-invalid': errors.obDescription }"
+            ></textarea>
+            <div v-if="errors.obDescription" class="invalid-feedback">
+              {{ errors.obDescription }}
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <label class="col-sm-3 col-form-label text-right label"
+            >Job Request<span style="color: red" class="pl-2">*</span></label
+          >
+          <div class="col-sm-9">
+            <textarea
+              v-model="jobRequest"
+              type="text"
+              class="form-control"
+              placeholder="Nhập yêu cầu công việc"
+              rows="5"
+              :class="{ 'is-invalid': errors.jobRequest }"
+            ></textarea>
+            <div v-if="errors.jobRequest" class="invalid-feedback">
+              {{ errors.jobRequest }}
+            </div>
+          </div>
+        </div>
+        <div class="form-group row">
+          <!-- Phần Languages -->
           <div class="form-group row">
             <label class="col-sm-3 col-form-label text-right label"
-              >Job Request<span style="color: red" class="pl-2">*</span></label
+              >Languages<span style="color: red" class="pl-2">*</span></label
             >
             <div class="col-sm-9">
-              <textarea
-                v-model="jobRequest"
-                type="text"
-                class="form-control"
-                placeholder="Nhập yêu cầu công việc"
-                rows="5"
-                :class="{ 'is-invalid': errors.jobRequest }"
-              ></textarea>
-              <div v-if="errors.jobRequest" class="invalid-feedback">
-                {{ errors.jobRequest }}
+              <div class="languages-container">
+                <div
+                  v-for="(language, index) in languagesArray"
+                  :key="index"
+                  class="language-item"
+                >
+                  <div class="language-input-group">
+                    <input
+                      v-model="languagesArray[index]"
+                      type="text"
+                      class="form-control"
+                      placeholder="Nhập ngôn ngữ lập trình"
+                    />
+                    <button @click="removeLanguage(index)" class="btn-remove">
+                      ×
+                    </button>
+                  </div>
+                </div>
+                <button @click="addLanguage" class="btn-add">
+                  + Thêm ngôn ngữ
+                </button>
               </div>
             </div>
           </div>
-          <div class="form-group row">
- <!-- Phần Languages -->
- <div class="form-group row">
-    <label class="col-sm-3 col-form-label text-right label">Languages<span style="color: red" class="pl-2">*</span></label>
-    <div class="col-sm-9">
-      <div class="languages-container">
-        <div v-for="(language, index) in languagesArray" :key="index" class="language-item">
-          <div class="language-input-group">
-            <input 
-              v-model="languagesArray[index]" 
-              type="text" 
-              class="form-control"
-              placeholder="Nhập ngôn ngữ lập trình"
-            />
-            <button @click="removeLanguage(index)" class="btn-remove">×</button>
-          </div>
-        </div>
-        <button @click="addLanguage" class="btn-add">+ Thêm ngôn ngữ</button>
-      </div>
-    </div>
-  </div>
           <div class="form-group row">
             <label class="col-sm-3 col-form-label text-right label"
               >Tuyển gấp</label
@@ -252,7 +276,7 @@
 </template>
 
 <script setup>
-import { ref, reactive,onMounted } from "vue";
+import { ref, reactive, onMounted } from "vue";
 import imgbanner from "@/assets/img/hna2.jpg";
 
 const uploadProgress = ref(0);
@@ -261,10 +285,10 @@ const title = ref("");
 const company = ref("");
 const location = ref("");
 const salary = ref("");
-const benefitsArray = ref(['']);
+const benefitsArray = ref([""]);
 const obDescription = ref("");
 const jobRequest = ref("");
-const languagesArray = ref(['']);
+const languagesArray = ref([""]);
 const logoUrl = ref("");
 const selectedFile = ref(null);
 const token = ref(localStorage.getItem("token"));
@@ -284,9 +308,8 @@ const errors = reactive({
   logo: "",
 });
 
-
 const addBenefit = () => {
-  benefitsArray.value.push('');
+  benefitsArray.value.push("");
 };
 
 const removeBenefit = (index) => {
@@ -297,7 +320,7 @@ const removeBenefit = (index) => {
 
 // Thêm các hàm xử lý languages
 const addLanguage = () => {
-  languagesArray.value.push('');
+  languagesArray.value.push("");
 };
 
 const removeLanguage = (index) => {
@@ -306,7 +329,6 @@ const removeLanguage = (index) => {
   }
 };
 
-
 const clearErrors = () => {
   Object.keys(errors).forEach((key) => {
     errors[key] = "";
@@ -314,7 +336,9 @@ const clearErrors = () => {
 };
 onMounted(async () => {
   try {
-    const res = await fetch("https://api.mysupership.vn/v1/partner/areas/province");
+    const res = await fetch(
+      "https://api.mysupership.vn/v1/partner/areas/province"
+    );
     const data = await res.json();
     provinces.value = data.results;
   } catch (error) {
@@ -346,7 +370,7 @@ const validateForm = () => {
     isValid = false;
   }
 
-  if (benefitsArray.value.every(benefit => !benefit.trim())) {
+  if (benefitsArray.value.every((benefit) => !benefit.trim())) {
     errors.benefits = "Vui lòng nhập quyền lợi";
     isValid = false;
   }
@@ -361,7 +385,7 @@ const validateForm = () => {
     isValid = false;
   }
 
-  if (languagesArray.value.every(language => !language.trim())) {
+  if (languagesArray.value.every((language) => !language.trim())) {
     errors.languages = "Vui lòng nhập ngôn ngữ lập trình";
     isValid = false;
   }
@@ -402,7 +426,7 @@ const fetchcreate = async () => {
 
   loading.value = true;
   try {
-    const check = await fetch("http://localhost:3000/api/payos/coin", {
+    const check = await fetch("https://job-api.mrun.site/api/payos/coin", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token.value}`,
@@ -416,8 +440,8 @@ const fetchcreate = async () => {
     }
 
     // Lọc các giá trị rỗng
-    const filteredBenefits = benefitsArray.value.filter(b => b.trim());
-    const filteredLanguages = languagesArray.value.filter(l => l.trim());
+    const filteredBenefits = benefitsArray.value.filter((b) => b.trim());
+    const filteredLanguages = languagesArray.value.filter((l) => l.trim());
 
     // Tạo object data trước
     const jobData = {
@@ -425,27 +449,27 @@ const fetchcreate = async () => {
       company: company.value,
       location: location.value,
       salary: salary.value,
-      benefits: filteredBenefits,  // Gửi trực tiếp mảng
-      programmingLanguages: filteredLanguages,  // Gửi trực tiếp mảng
+      benefits: filteredBenefits, // Gửi trực tiếp mảng
+      programmingLanguages: filteredLanguages, // Gửi trực tiếp mảng
       jobDescription: obDescription.value,
       jobRequest: jobRequest.value,
-      isUrgent: isUrgent.value
+      isUrgent: isUrgent.value,
     };
 
     // Tạo FormData và thêm file
     const formData = new FormData();
     formData.append("logo", selectedFile.value);
-    
+
     // Thêm các trường dữ liệu khác dưới dạng JSON string
-    Object.keys(jobData).forEach(key => {
-      if (key === 'benefits' || key === 'programmingLanguages') {
+    Object.keys(jobData).forEach((key) => {
+      if (key === "benefits" || key === "programmingLanguages") {
         formData.append(key, JSON.stringify(jobData[key]));
       } else {
         formData.append(key, jobData[key]);
       }
     });
 
-    const response = await fetch("http://localhost:3000/api/jobs/create", {
+    const response = await fetch("https://job-api.mrun.site/api/jobs/create", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token.value}`,
@@ -466,7 +490,6 @@ const fetchcreate = async () => {
     loading.value = false;
   }
 };
-
 </script>
 
 <style scoped>

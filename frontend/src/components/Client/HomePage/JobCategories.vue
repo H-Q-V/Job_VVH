@@ -45,10 +45,12 @@
           <tbody>
             <tr v-for="job in jobs" :key="job.id">
               <td>{{ job.title }}</td>
-              <td>{{ job.programmingLanguages.join(', ') }}</td>
+              <td>{{ job.programmingLanguages.join(", ") }}</td>
             </tr>
             <tr v-if="jobs.length === 0">
-              <td colspan="2" style="text-align: center;">Không có công việc nào.</td>
+              <td colspan="2" style="text-align: center">
+                Không có công việc nào.
+              </td>
             </tr>
           </tbody>
         </table>
@@ -71,8 +73,8 @@ export default {
   setup() {
     const locations = ref([]);
     const locationContainer = ref(null);
-    const displayedCount = ref(10); 
-    const isModalVisible = ref(false); 
+    const displayedCount = ref(10);
+    const isModalVisible = ref(false);
     const selectedLocation = ref({});
     const jobs = ref([]); // Danh sách công việc
 
@@ -83,7 +85,7 @@ export default {
     const fetchLocations = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/jobs/locations"
+          "https://job-api.mrun.site/api/jobs/locations"
         );
         locations.value = response.data.data;
       } catch (error) {
@@ -93,7 +95,9 @@ export default {
 
     const fetchJobsByLocation = async (location) => {
       try {
-        const response = await axios.get(`http://localhost:3000/api/jobs/search?location=${location}`);
+        const response = await axios.get(
+          `https://job-api.mrun.site/api/jobs/search?location=${location}`
+        );
         jobs.value = response.data.data; // Cập nhật danh sách công việc
       } catch (error) {
         console.error("Error fetching jobs:", error);
@@ -111,17 +115,17 @@ export default {
     };
 
     const loadMore = () => {
-      displayedCount.value += 3; 
+      displayedCount.value += 3;
     };
 
     const selectLocation = (location) => {
-      selectedLocation.value = location; 
-      isModalVisible.value = true; 
+      selectedLocation.value = location;
+      isModalVisible.value = true;
       fetchJobsByLocation(location.location); // Gọi hàm để fetch jobs ở đây
     };
 
     const closeModal = () => {
-      isModalVisible.value = false; 
+      isModalVisible.value = false;
       jobs.value = []; // Xóa danh sách công việc khi đóng modal
     };
 
@@ -142,8 +146,6 @@ export default {
   },
 };
 </script>
-
-
 
 <style scoped>
 .job-sidebar {

@@ -13,7 +13,7 @@ const product = ref({
     jobDescription: '',
     jobRequest: '',
     programmingLanguages: '',
-    isUrgent: false,
+    isUrgent: false
 });
 const menuItems = ref([]);
 const selectedMenuItems = ref(null);
@@ -36,7 +36,7 @@ const openNew = () => {
         jobDescription: '',
         jobRequest: '',
         programmingLanguages: '',
-        isUrgent: false,
+        isUrgent: false
     };
     submitted.value = false;
     menuDialog.value = true;
@@ -62,7 +62,7 @@ const confirm = (event, product) => {
 };
 onMounted(async () => {
     try {
-        const res = await fetch('http://localhost:3000/api/jobs/getAll');
+        const res = await fetch('https://job-api.mrun.site/api/jobs/getAll');
         const data = await res.json();
         menuItems.value = data.data;
     } catch (err) {
@@ -72,7 +72,7 @@ onMounted(async () => {
 const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-        product.value.logo = file.name; 
+        product.value.logo = file.name;
     }
 };
 const selectFile = () => {
@@ -90,25 +90,25 @@ const createMenu = async () => {
         { key: 'benefits', message: 'Benefits trường bị trống.' },
         { key: 'jobDescription', message: 'Job Description trường bị trống.' },
         { key: 'jobRequest', message: 'Job Request is required.' },
-        { key: 'programmingLanguages', message: 'Programming Languages trường bị trống.' },
+        { key: 'programmingLanguages', message: 'Programming Languages trường bị trống.' }
     ];
 
-    const missingFields = requiredFields.filter(field => !product.value[field.key]);
+    const missingFields = requiredFields.filter((field) => !product.value[field.key]);
 
-if (missingFields.length === requiredFields.length) {
-    toast.add({ severity: 'error', summary: 'Error', detail: 'Không có trường nào được nhập.', life: 3000 });
-    return;
-} else if (missingFields.length > 0) {
-    const messages = missingFields.map(field => field.message).join(' ');
-    toast.add({ severity: 'error', summary: 'Error', detail: `Bạn chưa thêm trường: ${messages}`, life: 3000 });
-    return;
-}
+    if (missingFields.length === requiredFields.length) {
+        toast.add({ severity: 'error', summary: 'Error', detail: 'Không có trường nào được nhập.', life: 3000 });
+        return;
+    } else if (missingFields.length > 0) {
+        const messages = missingFields.map((field) => field.message).join(' ');
+        toast.add({ severity: 'error', summary: 'Error', detail: `Bạn chưa thêm trường: ${messages}`, life: 3000 });
+        return;
+    }
     const formData = new FormData();
     formData.append('title', product.value.title);
     formData.append('company', product.value.company);
     formData.append('location', product.value.location);
     formData.append('salary', product.value.salary);
-    formData.append('logo', product.value.logo); 
+    formData.append('logo', product.value.logo);
 
     formData.append('benefits', product.value.benefits);
 
@@ -117,11 +117,10 @@ if (missingFields.length === requiredFields.length) {
     formData.append('programmingLanguages', product.value.programmingLanguages);
     formData.append('isUrgent', product.value.isUrgent ? 'true' : 'false');
 
-
     try {
-        const response = await fetch('http://localhost:3000/api/jobs/admin/create', {
+        const response = await fetch('https://job-api.mrun.site/api/jobs/admin/create', {
             method: 'POST',
-            body: formData, 
+            body: formData
         });
         const data = await response.json();
         if (response.ok) {
@@ -140,7 +139,7 @@ if (missingFields.length === requiredFields.length) {
 
 const updateJobs = async () => {
     try {
-        const response = await fetch(`http://localhost:3000/api/jobs/update/${product.value._id}`, {
+        const response = await fetch(`https://job-api.mrun.site/api/jobs/update/${product.value._id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -151,9 +150,9 @@ const updateJobs = async () => {
         if (response.ok) {
             const index = menuItems.value.findIndex((item) => item._id === product.value._id);
             if (index !== -1) {
-                menuItems.value[index] = data; 
+                menuItems.value[index] = data;
             }
-            display.value = false; 
+            display.value = false;
             location.reload();
             toast.add({ severity: 'success', summary: 'Success', detail: 'Menu updated successfully', life: 3000 });
         } else {
@@ -173,12 +172,12 @@ const deleteJobs = async (productId) => {
     }
 
     try {
-        const response = await fetch(`http://localhost:3000/api/jobs/delete/${productId}`, {
-            method: 'DELETE',
+        const response = await fetch(`https://job-api.mrun.site/api/jobs/delete/${productId}`, {
+            method: 'DELETE'
         });
         const data = await response.json();
         if (response.ok) {
-            menuItems.value = menuItems.value.filter(item => item._id !== productId);
+            menuItems.value = menuItems.value.filter((item) => item._id !== productId);
             toast.add({ severity: 'success', summary: 'Success', detail: 'Job deleted successfully', life: 3000 });
         } else {
             console.error(data);
@@ -262,13 +261,13 @@ const deleteJobs = async (productId) => {
             </template>
         </Column> -->
         <Column field="benefits" header="Benefits" :sortable="true" headerStyle="width:14%; min-width:10rem;">
-    <template #body="slotProps">
-        <span class="p-column-title">Benefits</span>
-        <span class="truncate-text" v-tooltip.top="slotProps.data.benefits">
-            {{ Array.isArray(slotProps.data.benefits) ? slotProps.data.benefits.join(', ') : slotProps.data.benefits }}
-        </span>
-    </template>
-</Column>
+            <template #body="slotProps">
+                <span class="p-column-title">Benefits</span>
+                <span class="truncate-text" v-tooltip.top="slotProps.data.benefits">
+                    {{ Array.isArray(slotProps.data.benefits) ? slotProps.data.benefits.join(', ') : slotProps.data.benefits }}
+                </span>
+            </template>
+        </Column>
         <Column field="jobDescription" header="Job Description" :sortable="true" headerStyle="width:14%; min-width:10rem;">
             <template #body="slotProps">
                 <span class="p-column-title">Job Description</span>
@@ -289,8 +288,8 @@ const deleteJobs = async (productId) => {
             <template #body="slotProps">
                 <span class="p-column-title">Language</span>
                 <span class="truncate-text" v-tooltip.top="slotProps.data.programmingLanguages">
-            {{ Array.isArray(slotProps.data.programmingLanguages) ? slotProps.data.programmingLanguages.join(', ') : slotProps.data.programmingLanguages }}
-        </span>
+                    {{ Array.isArray(slotProps.data.programmingLanguages) ? slotProps.data.programmingLanguages.join(', ') : slotProps.data.programmingLanguages }}
+                </span>
             </template>
         </Column>
         <Column field="isUrgent" header="Urgent" :sortable="true" headerStyle="width:14%; min-width:10rem;">
@@ -329,14 +328,14 @@ const deleteJobs = async (productId) => {
             <small class="p-invalid" v-if="submitted && !product.salary">Salary is required.</small>
         </div>
         <div class="field" field="_id">
-        <label for="logo">Logo</label>
-        <div class="file-upload">
-            <input type="file" id="logo" ref="fileInput" @change="handleFileChange" accept="image/*" style="display: none;" />
-            <Button label="Choose File" icon="pi pi-upload" @click="selectFile" />
-            <span v-if="product.logo" class="file-name">{{ product.logo }}</span>
+            <label for="logo">Logo</label>
+            <div class="file-upload">
+                <input type="file" id="logo" ref="fileInput" @change="handleFileChange" accept="image/*" style="display: none" />
+                <Button label="Choose File" icon="pi pi-upload" @click="selectFile" />
+                <span v-if="product.logo" class="file-name">{{ product.logo }}</span>
+            </div>
+            <small class="p-invalid" v-if="submitted && !product.logo">Logo is required.</small>
         </div>
-        <small class="p-invalid" v-if="submitted && !product.logo">Logo is required.</small>
-    </div>
         <div class="field" field="_id">
             <label for="benefits">Benefits</label>
             <InputText id="benefits" v-model.trim="product.benefits" required="true" autofocus :invalid="submitted && !!product.benefits" />
@@ -386,7 +385,7 @@ const deleteJobs = async (productId) => {
         </div>
         <div class="field">
             <label for="logo">Logo</label>
-            <InputText id="logo" v-model.trim="product.logo" readonly /> 
+            <InputText id="logo" v-model.trim="product.logo" readonly />
         </div>
         <div class="field">
             <label for="benefits">Benefits</label>

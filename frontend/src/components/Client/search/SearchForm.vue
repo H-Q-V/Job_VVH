@@ -1,46 +1,78 @@
 <template>
   <main>
     <div class="container-fluid search-fluid">
-      <div class="container search-wrapper" style="margin-top: 1rem;">
-      <Search @search-results="updateSearchResults" /> <!-- Đảm bảo tên component đúng -->
-        
+      <div class="container search-wrapper" style="margin-top: 1rem">
+        <Search @search-results="updateSearchResults" />
+        <!-- Đảm bảo tên component đúng -->
+
         <ul class="nav nav-tabs search-nav-tabs" id="myTab" role="tablist">
           <li class="nav-item search-nav-item" @click="setActiveTab('home')">
-            <a class="nav-link snav-link" :class="{ active: activeTab === 'home' }" id="home-tab" role="tab">Tìm việc làm</a>
+            <a
+              class="nav-link snav-link"
+              :class="{ active: activeTab === 'home' }"
+              id="home-tab"
+              role="tab"
+              >Tìm việc làm</a
+            >
           </li>
           <li class="nav-item search-nav-item" @click="setActiveTab('profile')">
-            <a class="nav-link snav-link" :class="{ active: activeTab === 'profile' }" id="profile-tab" role="tab">Tìm công ty</a>
+            <a
+              class="nav-link snav-link"
+              :class="{ active: activeTab === 'profile' }"
+              id="profile-tab"
+              role="tab"
+              >Tìm công ty</a
+            >
           </li>
         </ul>
         <div class="tab-content search-tab-content" id="myTabContent">
-          <div class="tab-pane stab-pane fade" :class="{ 'show active': activeTab === 'home' }" id="home" role="tabpanel">
+          <div
+            class="tab-pane stab-pane fade"
+            :class="{ 'show active': activeTab === 'home' }"
+            id="home"
+            role="tabpanel"
+          >
             <form class="bn-search-form" @submit.prevent="handleSearch">
               <div class="row">
                 <div class="col-md-10 col-sm-12">
                   <div class="row">
                     <div class="col-md-5">
                       <div class="input-group s-input-group">
-                        <input 
-                          type="text" 
-                          class="form-control sinput" 
+                        <input
+                          type="text"
+                          class="form-control sinput"
                           placeholder="Nhập kỹ năng, công việc,..."
                           v-model="searchQuery.keyword"
-                        >
+                        />
                         <span><i class="fa fa-search"></i></span>
                       </div>
                     </div>
                     <div class="col-md-4">
-                      <select class="form-control" v-model="searchQuery.language">
+                      <select
+                        class="form-control"
+                        v-model="searchQuery.language"
+                      >
                         <option value="">Tất cả ngôn ngữ</option>
-                        <option v-for="lang in languages" :key="lang" :value="lang">
+                        <option
+                          v-for="lang in languages"
+                          :key="lang"
+                          :value="lang"
+                        >
                           {{ lang }}
                         </option>
                       </select>
                     </div>
                     <div class="col-md-3">
-                      <select class="form-control" v-model="searchQuery.location">
+                      <select
+                        class="form-control"
+                        v-model="searchQuery.location"
+                      >
                         <option value="">Tất cả địa điểm</option>
-                        <option v-for="loc in locations" :key="loc" :value="loc">
+                        <option
+                          v-for="loc in locations"
+                          :key="loc"
+                          :value="loc"
+                        >
                           {{ loc }}
                         </option>
                       </select>
@@ -48,220 +80,353 @@
                   </div>
                 </div>
                 <div class="col-md-2 col-sm-12">
-                  <button type="submit" class="btn btn-primary btn-search col-sm-12">Tìm kiếm</button>
+                  <button
+                    type="submit"
+                    class="btn btn-primary btn-search col-sm-12"
+                  >
+                    Tìm kiếm
+                  </button>
                 </div>
               </div>
             </form>
           </div>
-          <div class="tab-pane stab-pane fade" :class="{ 'show active': activeTab === 'profile' }" id="profile" role="tabpanel">
+          <div
+            class="tab-pane stab-pane fade"
+            :class="{ 'show active': activeTab === 'profile' }"
+            id="profile"
+            role="tabpanel"
+          >
             <form class="bn-search-form" @submit.prevent="handleCompanySearch">
               <div class="row">
                 <div class="col-md-10 col-sm-12">
                   <div class="input-group s-input-group w-100">
-                    <input 
-                      type="text" 
-                      class="form-control sinput" 
+                    <input
+                      type="text"
+                      class="form-control sinput"
                       placeholder="Nhập tên công ty..."
                       v-model="companyQuery"
-                    >
+                    />
                     <span><i class="fa fa-search"></i></span>
                   </div>
                 </div>
                 <div class="col-md-2 col-sm-12">
-                  <button type="submit" class="btn btn-primary btn-search col-sm-12">Tìm kiếm</button>
+                  <button
+                    type="submit"
+                    class="btn btn-primary btn-search col-sm-12"
+                  >
+                    Tìm kiếm
+                  </button>
                 </div>
               </div>
             </form>
           </div>
         </div>
-       </div>
-    
-       <div class="container-fluid">
+      </div>
+
+      <div class="container-fluid">
         <div class="container search-wrapper">
           <div class="row">
             <div class="d-flex">
               <div class="col-md-3 col-sm-12 col-12">
-                
-                    <div class="filter-bar">
-                      <h5>Filter & Refind</h5>
-                      <div class="filter-form">
-                        <div class="filter-form-item">
-                          <p>
-                            <a @click="toggleIndustryFilter" class="btnf btn-filter" role="button" aria-expanded="false" aria-controls="filter-topic">
-                                Ngành nghề
-                              <i class="fa fa-angle-up" aria-hidden="true"></i>
-                           </a>
-                          </p>
-                          <div class="collapse" :class="{ show: isIndustryFilterVisible }" id="filter-topic">
-                            <div class="card o-card card-body">
-                              <div class="filter-panel">
-                                <div class="panel-content">
-                                  <div class="filter-topic cotain-common-filter">
-                                    <a href="#" class="filter-action">Tất cả ngành nghề</a>
-                                    <span class="filter-count">1,000</span>
-                                  </div>
-                                  <div class="filter-topic cotain-common-filter">
-                                    <a href="#" class="filter-action">Lập trình viên</a>
-                                    <span class="filter-count">555</span>
-                                  </div>
-                                  <!-- Thêm các mục khác ở đây -->
-                                </div>
+                <div class="filter-bar">
+                  <h5>Filter & Refind</h5>
+                  <div class="filter-form">
+                    <div class="filter-form-item">
+                      <p>
+                        <a
+                          @click="toggleIndustryFilter"
+                          class="btnf btn-filter"
+                          role="button"
+                          aria-expanded="false"
+                          aria-controls="filter-topic"
+                        >
+                          Ngành nghề
+                          <i class="fa fa-angle-up" aria-hidden="true"></i>
+                        </a>
+                      </p>
+                      <div
+                        class="collapse"
+                        :class="{ show: isIndustryFilterVisible }"
+                        id="filter-topic"
+                      >
+                        <div class="card o-card card-body">
+                          <div class="filter-panel">
+                            <div class="panel-content">
+                              <div class="filter-topic cotain-common-filter">
+                                <a href="#" class="filter-action"
+                                  >Tất cả ngành nghề</a
+                                >
+                                <span class="filter-count">1,000</span>
                               </div>
+                              <div class="filter-topic cotain-common-filter">
+                                <a href="#" class="filter-action"
+                                  >Lập trình viên</a
+                                >
+                                <span class="filter-count">555</span>
+                              </div>
+                              <!-- Thêm các mục khác ở đây -->
                             </div>
                           </div>
                         </div>
-                        <div class="filter-form-item">
-                          <p>
-                            <a id="clickc2_advance" class="btnf btn-filter" data-toggle="collapse" href="#filter-price" role="button" aria-expanded="false" aria-controls="collapseExample">
-                              Mức Lương
-                              <i class="fa fa-angle-up" aria-hidden="true"></i>
-                            </a>
-                          </p>
-                          <div class="collapse show" id="filter-price">
-                            <div class="card o-card card-body">
-                              <div class="filter-panel">
-                                <div class="panel-content">
-                                  <div class="filter-topic filter-input-price">
-                                    <form class="al-price-filter">
-                                      <span class="_fpblock">
-                                        <input type="number" class="if-price" placeholder="50,000">
-                                      </span>
-                                      <span class="_fpblock _line">
-                                        <p>-</p>
-                                      </span>
-                                      <span class="_fpblock">
-                                        <input type="number" class="if-price" placeholder="1,000,000">
-                                      </span>
-                                      <span class="_fpblock">
-                                        <button type="submit" class="sb-fprice"><i class="fa fa-angle-right" aria-hidden="true"></i></button>
-                                      </span>
-                                    </form>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="filter-form-item">
-                          <p>
-                            <a id="clickc3_advance" class="btnf btn-filter" data-toggle="collapse" href="#filter-rating" role="button" aria-expanded="false" aria-controls="collapseExample">
-                              Đánh giá
-                              <i class="fa fa-angle-up" aria-hidden="true"></i>
-                            </a>
-                          </p>
-                          <div class="collapse show" id="filter-rating">
-                            <div class="card o-card card-body">
-                              <div class="filter-panel">
-                                <div class="panel-content">
-                                  <div class="filter-rating">
-                                    <a href="#">
-                                      <span class="rating-wrapper">
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                      </span>
-                                      <span>(từ 5 sao)</span>
-                                    </a>
-                                  </div>
-                                  <div class="filter-rating">
-                                    <a href="#">
-                                      <span class="rating-wrapper">
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star-o" aria-hidden="true"></i>
-                                      </span>
-                                      <span>(từ 4 sao)</span>
-                                    </a>
-                                  </div>
-                                  <div class="filter-rating">
-                                    <a href="#">
-                                      <span class="rating-wrapper">
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star" aria-hidden="true"></i>
-                                        <i class="fa fa-star-o" aria-hidden="true"></i>
-                                        <i class="fa fa-star-o" aria-hidden="true"></i>
-                                      </span>
-                                      <span>(từ 3 sao)</span>
-                                    </a>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div class="filter-form-item">
-                          <p>
-                            <a id="clickc4_advance" class="btnf btn-filter" data-toggle="collapse" href="#filter-level" role="button" aria-expanded="false" aria-controls="collapseExample">
-                              Cấp bậc
-                              <i class="fa fa-angle-up" aria-hidden="true"></i>
-                            </a>
-                          </p>
-                          <div class="collapse show" id="filter-level">
-                            <div class="card o-card card-body">
-                              <div class="filter-panel">
-                                <div class="panel-content">
-                                  <div class="filter-topic cotain-common-filter">
-                                    <a href="#" class="filter-action">Tất cả cấp bậc</a>
-                                    <span class="filter-count">2,450</span>
-                                  </div>
-                                  <div class="filter-topic cotain-common-filter">
-                                    <a href="#" class="filter-action">Thực tập sinh</a>
-                                    <span class="filter-count">555</span>
-                                  </div>
-                                  <div class="filter-topic cotain-common-filter">
-                                    <a href="#" class="filter-action">Nhân viên</a>
-                                    <span class="filter-count">233</span>
-                                  </div>
-                                  <div class="filter-topic cotain-common-filter">
-                                    <a href="#" class="filter-action">Trưởng nhóm</a>
-                                    <span class="filter-count">100</span>
-                                  </div>
-                                  <div class="filter-topic cotain-common-filter">
-                                    <a href="#" class="filter-action">Trưởng phòng</a>
-                                    <span class="filter-count">99</span>
-                                  </div>
-                                  <div class="filter-topic cotain-common-filter">
-                                    <a href="#" class="filter-action">Phó giám đốc</a>
-                                    <span class="filter-count">95</span>
-                                  </div>
-                                  <div class="filter-topic cotain-common-filter">
-                                    <a href="#" class="filter-action">Giám đốc</a>
-                                    <span class="filter-count">77</span>
-                                  </div>
-                                  <div class="filter-topic cotain-common-filter">
-                                    <a href="#" class="filter-action">Tổng giám đốc điều hành</a>
-                                    <span class="filter-count">50</span>
-                                  </div>
-                                  <div class="filter-topic cotain-common-filter">
-                                    <a href="#" class="filter-action">Thư ký</a>
-                                    <span class="filter-count">50</span>
-                                  </div>
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div> <!-- filter bar -->
+                      </div>
                     </div>
-                  </div> <!-- ./ collapse -->
-                
-               
+                    <div class="filter-form-item">
+                      <p>
+                        <a
+                          id="clickc2_advance"
+                          class="btnf btn-filter"
+                          data-toggle="collapse"
+                          href="#filter-price"
+                          role="button"
+                          aria-expanded="false"
+                          aria-controls="collapseExample"
+                        >
+                          Mức Lương
+                          <i class="fa fa-angle-up" aria-hidden="true"></i>
+                        </a>
+                      </p>
+                      <div class="collapse show" id="filter-price">
+                        <div class="card o-card card-body">
+                          <div class="filter-panel">
+                            <div class="panel-content">
+                              <div class="filter-topic filter-input-price">
+                                <form class="al-price-filter">
+                                  <span class="_fpblock">
+                                    <input
+                                      type="number"
+                                      class="if-price"
+                                      placeholder="50,000"
+                                    />
+                                  </span>
+                                  <span class="_fpblock _line">
+                                    <p>-</p>
+                                  </span>
+                                  <span class="_fpblock">
+                                    <input
+                                      type="number"
+                                      class="if-price"
+                                      placeholder="1,000,000"
+                                    />
+                                  </span>
+                                  <span class="_fpblock">
+                                    <button type="submit" class="sb-fprice">
+                                      <i
+                                        class="fa fa-angle-right"
+                                        aria-hidden="true"
+                                      ></i>
+                                    </button>
+                                  </span>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="filter-form-item">
+                      <p>
+                        <a
+                          id="clickc3_advance"
+                          class="btnf btn-filter"
+                          data-toggle="collapse"
+                          href="#filter-rating"
+                          role="button"
+                          aria-expanded="false"
+                          aria-controls="collapseExample"
+                        >
+                          Đánh giá
+                          <i class="fa fa-angle-up" aria-hidden="true"></i>
+                        </a>
+                      </p>
+                      <div class="collapse show" id="filter-rating">
+                        <div class="card o-card card-body">
+                          <div class="filter-panel">
+                            <div class="panel-content">
+                              <div class="filter-rating">
+                                <a href="#">
+                                  <span class="rating-wrapper">
+                                    <i
+                                      class="fa fa-star"
+                                      aria-hidden="true"
+                                    ></i>
+                                    <i
+                                      class="fa fa-star"
+                                      aria-hidden="true"
+                                    ></i>
+                                    <i
+                                      class="fa fa-star"
+                                      aria-hidden="true"
+                                    ></i>
+                                    <i
+                                      class="fa fa-star"
+                                      aria-hidden="true"
+                                    ></i>
+                                    <i
+                                      class="fa fa-star"
+                                      aria-hidden="true"
+                                    ></i>
+                                  </span>
+                                  <span>(từ 5 sao)</span>
+                                </a>
+                              </div>
+                              <div class="filter-rating">
+                                <a href="#">
+                                  <span class="rating-wrapper">
+                                    <i
+                                      class="fa fa-star"
+                                      aria-hidden="true"
+                                    ></i>
+                                    <i
+                                      class="fa fa-star"
+                                      aria-hidden="true"
+                                    ></i>
+                                    <i
+                                      class="fa fa-star"
+                                      aria-hidden="true"
+                                    ></i>
+                                    <i
+                                      class="fa fa-star"
+                                      aria-hidden="true"
+                                    ></i>
+                                    <i
+                                      class="fa fa-star-o"
+                                      aria-hidden="true"
+                                    ></i>
+                                  </span>
+                                  <span>(từ 4 sao)</span>
+                                </a>
+                              </div>
+                              <div class="filter-rating">
+                                <a href="#">
+                                  <span class="rating-wrapper">
+                                    <i
+                                      class="fa fa-star"
+                                      aria-hidden="true"
+                                    ></i>
+                                    <i
+                                      class="fa fa-star"
+                                      aria-hidden="true"
+                                    ></i>
+                                    <i
+                                      class="fa fa-star"
+                                      aria-hidden="true"
+                                    ></i>
+                                    <i
+                                      class="fa fa-star-o"
+                                      aria-hidden="true"
+                                    ></i>
+                                    <i
+                                      class="fa fa-star-o"
+                                      aria-hidden="true"
+                                    ></i>
+                                  </span>
+                                  <span>(từ 3 sao)</span>
+                                </a>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div class="filter-form-item">
+                      <p>
+                        <a
+                          id="clickc4_advance"
+                          class="btnf btn-filter"
+                          data-toggle="collapse"
+                          href="#filter-level"
+                          role="button"
+                          aria-expanded="false"
+                          aria-controls="collapseExample"
+                        >
+                          Cấp bậc
+                          <i class="fa fa-angle-up" aria-hidden="true"></i>
+                        </a>
+                      </p>
+                      <div class="collapse show" id="filter-level">
+                        <div class="card o-card card-body">
+                          <div class="filter-panel">
+                            <div class="panel-content">
+                              <div class="filter-topic cotain-common-filter">
+                                <a href="#" class="filter-action"
+                                  >Tất cả cấp bậc</a
+                                >
+                                <span class="filter-count">2,450</span>
+                              </div>
+                              <div class="filter-topic cotain-common-filter">
+                                <a href="#" class="filter-action"
+                                  >Thực tập sinh</a
+                                >
+                                <span class="filter-count">555</span>
+                              </div>
+                              <div class="filter-topic cotain-common-filter">
+                                <a href="#" class="filter-action">Nhân viên</a>
+                                <span class="filter-count">233</span>
+                              </div>
+                              <div class="filter-topic cotain-common-filter">
+                                <a href="#" class="filter-action"
+                                  >Trưởng nhóm</a
+                                >
+                                <span class="filter-count">100</span>
+                              </div>
+                              <div class="filter-topic cotain-common-filter">
+                                <a href="#" class="filter-action"
+                                  >Trưởng phòng</a
+                                >
+                                <span class="filter-count">99</span>
+                              </div>
+                              <div class="filter-topic cotain-common-filter">
+                                <a href="#" class="filter-action"
+                                  >Phó giám đốc</a
+                                >
+                                <span class="filter-count">95</span>
+                              </div>
+                              <div class="filter-topic cotain-common-filter">
+                                <a href="#" class="filter-action">Giám đốc</a>
+                                <span class="filter-count">77</span>
+                              </div>
+                              <div class="filter-topic cotain-common-filter">
+                                <a href="#" class="filter-action"
+                                  >Tổng giám đốc điều hành</a
+                                >
+                                <span class="filter-count">50</span>
+                              </div>
+                              <div class="filter-topic cotain-common-filter">
+                                <a href="#" class="filter-action">Thư ký</a>
+                                <span class="filter-count">50</span>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- filter bar -->
+                </div>
+              </div>
+              <!-- ./ collapse -->
+
               <div class="col-md-9 col-sm-12 col-12">
                 <!-- Đây là nơi hiển thị kết quả tìm kiếm -->
                 <div v-if="searchResults.length > 0">
-                  <h4 class="search-find">Tìm thấy {{ searchResults.length }} việc làm đang tuyển dụng</h4>
+                  <h4 class="search-find">
+                    Tìm thấy {{ searchResults.length }} việc làm đang tuyển dụng
+                  </h4>
                   <div class="job-board-wrap">
                     <div class="job-group">
-                      <div v-for="job in searchResults" :key="job.id" class="job pagi">
+                      <div
+                        v-for="job in searchResults"
+                        :key="job.id"
+                        class="job pagi"
+                      >
                         <div class="job-content">
                           <div class="job-logo">
                             <a href="#">
-                              <img :src="job.logo" class="job-logo-ima" alt="job-logo">
+                              <img
+                                :src="job.logo"
+                                class="job-logo-ima"
+                                alt="job-logo"
+                              />
                             </a>
                           </div>
                           <div class="job-desc">
@@ -269,23 +434,45 @@
                               <a href="#">{{ job.title }}</a>
                             </div>
                             <div class="job-company">
-                              <a href="#">{{ job.company }}</a> | <a href="#" class="job-address"><i class="fa fa-map-marker" aria-hidden="true"></i> {{ job.location }}</a>
+                              <a href="#">{{ job.company }}</a> |
+                              <a href="#" class="job-address"
+                                ><i
+                                  class="fa fa-map-marker"
+                                  aria-hidden="true"
+                                ></i>
+                                {{ job.location }}</a
+                              >
                             </div>
                             <div class="job-inf">
                               <div class="job-main-skill">
-                                <i class="fa fa-code" aria-hidden="true"></i> <a href="#">{{ job.mainSkill }}</a>
+                                <i class="fa fa-code" aria-hidden="true"></i>
+                                <a href="#">{{ job.mainSkill }}</a>
                               </div>
                               <div class="job-salary">
                                 <i class="fa fa-money" aria-hidden="true"></i>
-                                <span class="salary-min">{{ job.salary }}<em class="salary-unit"></em></span>
+                                <span class="salary-min"
+                                  >{{ job.salary }}<em class="salary-unit"></em
+                                ></span>
                               </div>
                               <div class="job-deadline">
-                                <span><i class="fa fa-clock-o" aria-hidden="true"></i> Hạn nộp: <strong>{{ job.deadline }}</strong></span>
+                                <span
+                                  ><i
+                                    class="fa fa-clock-o"
+                                    aria-hidden="true"
+                                  ></i>
+                                  Hạn nộp:
+                                  <strong>{{ job.deadline }}</strong></span
+                                >
                               </div>
                             </div>
                           </div>
                           <div class="wrap-btn-appl">
-                            <a href="#" class="btn btn-appl" @click.stop="openJdPage(job)">Apply Now</a>
+                            <a
+                              href="#"
+                              class="btn btn-appl"
+                              @click.stop="openJdPage(job)"
+                              >Apply Now</a
+                            >
                           </div>
                         </div>
                       </div>
@@ -299,28 +486,28 @@
             </div>
           </div>
         </div>
-       </div>
-     </div>
+      </div>
+    </div>
   </main>
 </template>
 
 <script setup>
-import { ref, onMounted, defineEmits } from 'vue';
-import { useRouter } from 'vue-router'; 
-const emit = defineEmits(); 
-const activeTab = ref('home');
+import { ref, onMounted, defineEmits } from "vue";
+import { useRouter } from "vue-router";
+const emit = defineEmits();
+const activeTab = ref("home");
 const languages = ref([]);
-const locations = ref(['Hồ Chí Minh', 'Đà Nẵng']);
+const locations = ref(["Hồ Chí Minh", "Đà Nẵng"]);
 const searchQuery = ref({
-  keyword: '',
-  language: '',
-  location: ''
+  keyword: "",
+  language: "",
+  location: "",
 });
-const companyQuery = ref('');
+const companyQuery = ref("");
 // const isFilterVisible = ref(false);
 const isIndustryFilterVisible = ref(false);
-const searchResults = ref([]); 
-const router = useRouter(); 
+const searchResults = ref([]);
+const router = useRouter();
 
 // const toggleFilter = () => {
 //   isFilterVisible.value = !isFilterVisible.value;
@@ -332,14 +519,16 @@ const toggleIndustryFilter = () => {
 
 onMounted(async () => {
   try {
-    const res = await fetch('http://localhost:3000/api/jobs/getAll');
+    const res = await fetch("https://job-api.mrun.site/api/jobs/getAll");
     const data = await res.json();
     if (data.success) {
-      locations.value = [...new Set(data.data.map(job => job.location))];
-      languages.value = [...new Set(data.data.flatMap(job => job.programmingLanguages))];
+      locations.value = [...new Set(data.data.map((job) => job.location))];
+      languages.value = [
+        ...new Set(data.data.flatMap((job) => job.programmingLanguages)),
+      ];
     }
   } catch (error) {
-    console.error('Error fetching locations:', error);
+    console.error("Error fetching locations:", error);
   }
 });
 
@@ -350,53 +539,59 @@ const setActiveTab = (tab) => {
 const handleSearch = async () => {
   try {
     const params = new URLSearchParams();
-    if (searchQuery.value.keyword) params.append('keyword', searchQuery.value.keyword);
-    if (searchQuery.value.location) params.append('location', searchQuery.value.location);
-    if (searchQuery.value.language) params.append('language', searchQuery.value.language);
+    if (searchQuery.value.keyword)
+      params.append("keyword", searchQuery.value.keyword);
+    if (searchQuery.value.location)
+      params.append("location", searchQuery.value.location);
+    if (searchQuery.value.language)
+      params.append("language", searchQuery.value.language);
 
-    const res = await fetch(`http://localhost:3000/api/jobs/search?${params}`);
+    const res = await fetch(
+      `https://job-api.mrun.site/api/jobs/search?${params}`
+    );
     const data = await res.json();
-    
+
     if (data.success) {
       searchResults.value = data.data;
-      emit('search-results', data.data); 
+      emit("search-results", data.data);
     }
   } catch (error) {
-    console.error('Error searching jobs:', error);
+    console.error("Error searching jobs:", error);
   }
 };
 
 const handleCompanySearch = async () => {
   if (!companyQuery.value) return;
-  
+
   try {
-    const res = await fetch(`http://localhost:3000/api/jobs/search?company=${companyQuery.value}`);
+    const res = await fetch(
+      `https://job-api.mrun.site/api/jobs/search?company=${companyQuery.value}`
+    );
     const data = await res.json();
-    
+
     if (data.success) {
-      emit('search-results', data.data); 
+      emit("search-results", data.data);
     }
   } catch (error) {
-    console.error('Error searching companies:', error);
+    console.error("Error searching companies:", error);
   }
 };
 
 const openJdPage = (job) => {
-  console.log('Job object:', job); 
-  if (job && job._id) { 
-    router.push({ 
-      name: 'jd-page', 
-      params: { id: job._id.toString() } 
+  console.log("Job object:", job);
+  if (job && job._id) {
+    router.push({
+      name: "jd-page",
+      params: { id: job._id.toString() },
     });
   } else {
-    console.error('Job or Job ID is undefined', job);
+    console.error("Job or Job ID is undefined", job);
   }
 };
 
 const updateSearchResults = (results) => {
-  searchResults.value = results; 
-  console.log('Updated search results:', searchResults.value);
-
+  searchResults.value = results;
+  console.log("Updated search results:", searchResults.value);
 };
 </script>
 
@@ -409,12 +604,13 @@ const updateSearchResults = (results) => {
   flex-grow: 1;
 }
 
-.input-group, .form-control {
-  height: 50px; 
+.input-group,
+.form-control {
+  height: 50px;
 }
 
 .form-control {
-  padding: 0.375rem 0.75rem; 
+  padding: 0.375rem 0.75rem;
 }
 
 .search-wrapper {

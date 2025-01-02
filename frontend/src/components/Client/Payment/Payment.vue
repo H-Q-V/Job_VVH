@@ -93,7 +93,7 @@ const fetchpayment = async () => {
       amount: rawAmount,
     };
     const response = await fetch(
-      "http://localhost:3000/api/payos/create-payment-link",
+      "https://job-api.mrun.site/api/payos/create-payment-link",
       {
         method: "POST",
         headers: {

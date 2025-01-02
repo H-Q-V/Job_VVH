@@ -61,7 +61,7 @@ const coins = ref(0);
 
 const fetchCoin = async () => {
   try {
-    const response = await fetch("http://localhost:3000/api/payos/coin", {
+    const response = await fetch("https://job-api.mrun.site/api/payos/coin", {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token.value}`,

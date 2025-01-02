@@ -86,7 +86,7 @@ const register = async () => {
   data.password = password.value;
   status.value = !status.value;
   const postUser = await axios.post(
-    `http://localhost:3000/api/auth/login`,
+    `https://job-api.mrun.site/api/auth/login`,
     data
   );
   console.log(postUser.data);
