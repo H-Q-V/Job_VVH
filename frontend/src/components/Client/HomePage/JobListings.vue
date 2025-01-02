@@ -1,4 +1,3 @@
-
 <template>
   <div class="row">
     <div class="col-md-12 job-board2-wrap">
@@ -59,7 +58,7 @@ const router = useRouter();
 const jobs = ref([]);
 onMounted(async () => {
   try {
-    const res = await fetch("http://localhost:3000/api/jobs/getAll");
+    const res = await fetch("https://job-api.mrun.site/api/jobs/getAll");
     const data = await res.json();
     // Sắp xếp theo ID (nếu ID có tính thời gian như MongoDB)
     jobs.value = data.data.sort((a, b) => {

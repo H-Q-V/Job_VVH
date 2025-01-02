@@ -13,7 +13,7 @@ const productToDelete = ref(null);
 
 onMounted(async () => {
     try {
-        const res = await fetch('http://localhost:3000/api/auth/admin/all');
+        const res = await fetch('https://job-api.mrun.site/api/auth/admin/all');
         const data = await res.json();
         menuItems.value = data.data;
         console.log(menuItems.value);
@@ -24,7 +24,7 @@ onMounted(async () => {
 
 const createUser = async () => {
     try {
-        const response = await fetch('http://localhost:3000/api/user/post', {
+        const response = await fetch('https://job-api.mrun.site/api/user/post', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -45,7 +45,7 @@ const createUser = async () => {
 
 const updateUser = async () => {
     try {
-        const response = await fetch(`http://localhost:3000/api/user/update/${product.value._id}`, {
+        const response = await fetch(`https://job-api.mrun.site/api/user/update/${product.value._id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -72,7 +72,7 @@ const updateUser = async () => {
 
 const deleteMenu = async (productId) => {
     try {
-        const response = await fetch(`http://localhost:3000/api/user/delete/${productId}`, {
+        const response = await fetch(`https://job-api.mrun.site/api/user/delete/${productId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'

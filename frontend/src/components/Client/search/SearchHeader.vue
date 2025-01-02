@@ -5,10 +5,18 @@
         <!-- <a class="navbar-brand" href="#">Navbar</a> -->
         <a href="#" class="nav-logo">
           <router-link to="/">
-          <img :src="logoImage" alt="TechJobs Logo">
-        </router-link>
+            <img :src="logoImage" alt="TechJobs Logo" />
+          </router-link>
         </a>
-        <button class="navbar-toggler tnavbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <button
+          class="navbar-toggler tnavbar-toggler"
+          type="button"
+          data-toggle="collapse"
+          data-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent"
+          aria-expanded="false"
+          aria-label="Toggle navigation"
+        >
           <!-- <span class="navbar-toggler-icon"></span> -->
           <i class="fa fa-bars icn-res" aria-hidden="true"></i>
         </button>
@@ -16,29 +24,29 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav mr-auto tnav-left tn-nav">
             <li class="nav-item" v-for="item in menuItems" :key="item._id">
-            <a class="nav-link" :href="item.link">{{ item.name }}</a>
-          </li>
+              <a class="nav-link" :href="item.link">{{ item.name }}</a>
+            </li>
           </ul>
           <ul class="navbar-nav mr-auto my-2 my-lg-0 tnav-right tn-nav">
-          <ul class="button-auth" v-if="!isLogin">
-            <li class="nav-item">
-              <router-link class="nav-link" :to="{ name: 'Register' }"
-                >Đăng Ký</router-link
-              >
-            </li>
-            <li class="nav-item">
-              <router-link class="nav-link" :to="{ name: 'Login' }"
-                >Đăng Nhập</router-link
-              >
+            <ul class="button-auth" v-if="!isLogin">
+              <li class="nav-item">
+                <router-link class="nav-link" :to="{ name: 'Register' }"
+                  >Đăng Ký</router-link
+                >
+              </li>
+              <li class="nav-item">
+                <router-link class="nav-link" :to="{ name: 'Login' }"
+                  >Đăng Nhập</router-link
+                >
+              </li>
+            </ul>
+            <li class="button-auth" v-else>
+              <span class="user-info">Xin chào, {{ nameUser }}</span>
+              <div class="btn-logout" @click="logout">
+                <!-- <i class="fa fa-sign-out sign-out-icon" aria-hidden="true"></i> -->
+              </div>
             </li>
           </ul>
-          <li class="button-auth" v-else>
-            <span class="user-info">Xin chào, {{ nameUser }}</span>
-            <div class="btn-logout" @click="logout">
-              <!-- <i class="fa fa-sign-out sign-out-icon" aria-hidden="true"></i> -->
-            </div>
-          </li>
-        </ul>
         </div>
       </nav>
     </div>
@@ -46,39 +54,39 @@
 </template>
 
 <script>
-import { ref, onMounted } from 'vue';
-import logoImage from '@/assets/img/techjobs_bgw.png';
+import { ref, onMounted } from "vue";
+import logoImage from "@/assets/img/techjobs_bgw.png";
 
 export default {
-name: 'SearchHeader',
-setup() {
-  const isLogin = ref(false);
-  const menuItems = ref([]);
-  const nameUser = ref("");
+  name: "SearchHeader",
+  setup() {
+    const isLogin = ref(false);
+    const menuItems = ref([]);
+    const nameUser = ref("");
 
-  onMounted(async () => {
-    if (localStorage.getItem("token")) {
-      isLogin.value = true;
-      nameUser.value = localStorage.getItem("name");
-    }
-    try {
-      const res = await fetch("http://localhost:3000/api/menu/getAll");
-      const data = await res.json();
-      menuItems.value = data.data;
-      console.log(menuItems.value);
-    } catch (err) {
-      console.log(err);
-    }
-  });
+    onMounted(async () => {
+      if (localStorage.getItem("token")) {
+        isLogin.value = true;
+        nameUser.value = localStorage.getItem("name");
+      }
+      try {
+        const res = await fetch("https://job-api.mrun.site/api/menu/getAll");
+        const data = await res.json();
+        menuItems.value = data.data;
+        console.log(menuItems.value);
+      } catch (err) {
+        console.log(err);
+      }
+    });
 
-  return {
-    logoImage,
-    isLogin,
-    menuItems,
-    nameUser
-  };
-}
-}
+    return {
+      logoImage,
+      isLogin,
+      menuItems,
+      nameUser,
+    };
+  },
+};
 </script>
 <style scoped>
 .fluid-nav,
@@ -129,17 +137,17 @@ ul.tn-nav li a:hover {
   color: #fff !important;
 }
 .button-auth {
-display: flex;
-list-style: none;
-padding: 0;
-margin: 0;
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .button-auth .nav-item {
-margin-right: 10px;
+  margin-right: 10px;
 }
 
 .button-auth .nav-item:last-child {
-margin-right: 0;
+  margin-right: 0;
 }
 </style>

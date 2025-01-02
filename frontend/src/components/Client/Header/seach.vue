@@ -1,4 +1,3 @@
-
 <template>
   <div class="container-fluid search-fluid">
     <div class="container search-wrapper" style="margin-top: -11rem">
@@ -124,7 +123,7 @@ const searchQuery = ref({
 
 onMounted(async () => {
   try {
-    const res = await fetch("http://localhost:3000/api/jobs/getAll");
+    const res = await fetch("https://job-api.mrun.site/api/jobs/getAll");
     const data = await res.json();
     if (data.success) {
       locations.value = [...new Set(data.data.map((job) => job.location))];
@@ -153,7 +152,7 @@ const handleSearch = async () => {
     params.append("isUrgent", "true");
 
     const res = await axios.get(
-      `http://localhost:3000/api/jobs/search?${params}`
+      `https://job-api.mrun.site/api/jobs/search?${params}`
     );
 
     if (res.data.success) {

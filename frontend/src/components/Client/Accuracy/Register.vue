@@ -43,8 +43,7 @@
                 />
               </div>
             </div>
-           
-          
+
             <RouterLink
               :to="{ name: 'Login' }"
               class="fg-login d-inline-block"
@@ -87,7 +86,6 @@ const data = {
   name: "",
   email: "",
   password: "",
-  
 };
 
 const register = async () => {
@@ -105,7 +103,7 @@ const register = async () => {
   data.password = password.value;
   status.value = !status.value;
   const postUser = await axios.post(
-    `http://localhost:3000/api/auth/register`,
+    `https://job-api.mrun.site/api/auth/register`,
     data
   );
   console.log(postUser.data);

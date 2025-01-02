@@ -16,7 +16,7 @@ const formatCurrency = (value) => {
 
 onMounted(async () => {
     try {
-        const res = await fetch('http://localhost:3000/api/menu/getAll');
+        const res = await fetch('https://job-api.mrun.site/api/menu/getAll');
         const data = await res.json();
         menuItems.value = data.data;
     } catch (err) {
@@ -26,7 +26,7 @@ onMounted(async () => {
 
 const createMenu = async () => {
     try {
-        const response = await fetch('http://localhost:3000/api/menu/create', {
+        const response = await fetch('https://job-api.mrun.site/api/menu/create', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -50,7 +50,7 @@ const createMenu = async () => {
 
 const updateMenu = async () => {
     try {
-        const response = await fetch(`http://localhost:3000/api/menu/update/${product.value._id}`, {
+        const response = await fetch(`https://job-api.mrun.site/api/menu/update/${product.value._id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json'
@@ -77,7 +77,7 @@ const updateMenu = async () => {
 
 const deleteMenu = async (productId) => {
     try {
-        const response = await fetch(`http://localhost:3000/api/menu/delete/${productId}`, {
+        const response = await fetch(`https://job-api.mrun.site/api/menu/delete/${productId}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json'

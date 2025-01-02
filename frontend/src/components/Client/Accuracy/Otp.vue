@@ -62,7 +62,7 @@ const verifyOTP = async () => {
   }
   data.otp = otp.value;
   const postOtp = await axios.post(
-    `http://localhost:3000/api/auth/verify-otp`,
+    `https://job-api.mrun.site/api/auth/verify-otp`,
     data
   );
   console.log(postOtp.data);

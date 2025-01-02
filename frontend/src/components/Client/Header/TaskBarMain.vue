@@ -83,7 +83,7 @@ onMounted(async () => {
     nameUser.value = localStorage.getItem("name");
   }
   try {
-    const res = await fetch("http://localhost:3000/api/menu/getAll");
+    const res = await fetch("https://job-api.mrun.site/api/menu/getAll");
     const data = await res.json();
     menuItems.value = data.data;
     console.log(menuItems.value);

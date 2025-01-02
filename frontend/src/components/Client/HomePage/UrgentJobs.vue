@@ -5,17 +5,21 @@
         <span>Tuyển gấp</span>
       </h2>
 
-      <div class="job-group" @scroll="handleScroll"> 
-        <div v-for="(job, index) in urgentJobs" 
-             :key="job._id" 
-             class="job pagi" 
-             @click="openJdPage(job)"> 
+      <div class="job-group" @scroll="handleScroll">
+        <div
+          v-for="(job, index) in urgentJobs"
+          :key="job._id"
+          class="job pagi"
+          @click="openJdPage(job)"
+        >
           <div class="job-content">
             <div class="job-logo">
               <a :href="job.companyLink">
-                <img :src="job.logo" 
-                     class="job-logo-ima" 
-                     :alt="job.company + ' logo'"> 
+                <img
+                  :src="job.logo"
+                  class="job-logo-ima"
+                  :alt="job.company + ' logo'"
+                />
               </a>
             </div>
 
@@ -24,32 +28,40 @@
                 <a :href="job.link">{{ job.title }}</a>
               </div>
               <div class="job-company">
-                <a :href="job.companyLink">công ty : {{ job.company }}</a> | 
+                <a :href="job.companyLink">công ty : {{ job.company }}</a> |
                 <a :href="job.link" class="job-address">
                   <i class="fa fa-map-marker" aria-hidden="true"></i>
                   địa chỉ : {{ job.location }}
                 </a>
               </div>
 
-              <div class="job-inf" :class="{ 'wrap-info': job.programmingLanguages.length > 4 }">
+              <div
+                class="job-inf"
+                :class="{ 'wrap-info': job.programmingLanguages.length > 4 }"
+              >
                 <div class="job-main-skill">
                   <span class="programmingLanguages-label">Ngôn ngữ:</span>
                   <div class="programmingLanguages-container">
-                    <span v-for="(language, index) in job.programmingLanguages" 
-                          :key="index" 
-                          class="programmingLanguages-value">
-                          {{ language }}
+                    <span
+                      v-for="(language, index) in job.programmingLanguages"
+                      :key="index"
+                      class="programmingLanguages-value"
+                    >
+                      {{ language }}
                     </span>
                   </div>
                 </div>
-                
+
                 <div class="job-info-right">
                   <div class="job-salary">
                     <i class="fa fa-money" aria-hidden="true"></i>
                     <span class="salary">Giá: {{ job.salary }}</span>
                   </div>
                   <div class="job-deadline">
-                    <span><i class="fa fa-clock-o" aria-hidden="true"></i> Hạn nộp:15/01/2019</span> 
+                    <span
+                      ><i class="fa fa-clock-o" aria-hidden="true"></i> Hạn
+                      nộp:15/01/2019</span
+                    >
                   </div>
                 </div>
               </div>
@@ -62,56 +74,58 @@
 </template>
 
 <script>
-import axios from 'axios';
-import SlickCarousel from 'vue-slick-carousel';
-import 'vue-slick-carousel/dist/vue-slick-carousel.css';
-import { useRouter } from 'vue-router'; 
+import axios from "axios";
+import SlickCarousel from "vue-slick-carousel";
+import "vue-slick-carousel/dist/vue-slick-carousel.css";
+import { useRouter } from "vue-router";
 
 export default {
-  name: 'UrgentJobs',
+  name: "UrgentJobs",
   components: {
     SlickCarousel,
   },
   data() {
     return {
       urgentJobs: [],
-      displayedCount: 4, 
+      displayedCount: 4,
     };
   },
   setup() {
-    const router = useRouter(); 
+    const router = useRouter();
 
     const openJdPage = (job) => {
       if (job && job._id) {
-        router.push({ 
-          name: 'jd-page', 
+        router.push({
+          name: "jd-page",
           params: { id: job._id.toString() },
-          state: { jobDetails: job }  
+          state: { jobDetails: job },
         });
       } else {
-        console.error('Job or Job ID is undefined', job);
+        console.error("Job or Job ID is undefined", job);
       }
     };
 
-    return { openJdPage }; 
+    return { openJdPage };
   },
   async created() {
     await this.fetchUrgentJobs();
   },
   computed: {
     displayedJobs() {
-      return this.urgentJobs.slice(0, this.displayedCount); 
-    }
+      return this.urgentJobs.slice(0, this.displayedCount);
+    },
   },
   methods: {
     async fetchUrgentJobs() {
       try {
-        const response = await axios.get('http://localhost:3000/api/jobs/urgent'); 
+        const response = await axios.get(
+          "https://job-api.mrun.site/api/jobs/urgent"
+        );
         this.urgentJobs = response.data.data.sort((a, b) => {
           return b._id.localeCompare(a._id);
-        }); 
+        });
       } catch (error) {
-        console.error('Error fetching urgent jobs:', error);
+        console.error("Error fetching urgent jobs:", error);
       }
     },
     handleScroll(event) {
@@ -122,32 +136,32 @@ export default {
     },
     loadMoreJobs() {
       if (this.displayedCount < this.urgentJobs.length) {
-        this.displayedCount += 3; 
+        this.displayedCount += 3;
       }
     },
     updateJobsList(jobs) {
-      this.urgentJobs = jobs.filter(job => job.isUrgent); 
-      this.displayedCount = 4; 
-    }
+      this.urgentJobs = jobs.filter((job) => job.isUrgent);
+      this.displayedCount = 4;
+    },
   },
 };
 </script>
 
 <style scoped>
 .job-board-wrap {
-  margin-top: 30px; 
+  margin-top: 30px;
 }
 
 .job-group {
-  max-height: 500px; 
+  max-height: 500px;
   overflow-y: auto;
 }
 
 .job-content {
-  display: flex; 
-  padding: 10px; 
-  border-bottom: 1px solid #eaeaea; 
-  cursor: pointer; 
+  display: flex;
+  padding: 10px;
+  border-bottom: 1px solid #eaeaea;
+  cursor: pointer;
 }
 
 .job-content:hover {
@@ -155,7 +169,7 @@ export default {
 }
 
 .job-logo {
-  width: 80px; 
+  width: 80px;
   margin-right: 15px;
 }
 
@@ -241,8 +255,8 @@ export default {
 }
 
 .programmingLanguages-value:hover {
-  background-color: #d4e4fd; 
-  border-color: #a1c2f9; 
+  background-color: #d4e4fd;
+  border-color: #a1c2f9;
 }
 
 .job-info-right {
@@ -251,7 +265,7 @@ export default {
   margin-top: 10px;
 }
 
-.job-salary, 
+.job-salary,
 .job-deadline {
   display: flex;
   align-items: center;
@@ -271,7 +285,7 @@ export default {
   .job-inf {
     flex-direction: column;
   }
-  
+
   .job-main-skill {
     margin-bottom: 10px;
   }
