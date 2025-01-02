@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid job-detail-wrap">
+  <div v-if="jobDetails" class="container-fluid job-detail-wrap">
     <div class="container job-detail">
       <div class="job-detail-header">
         <div class="row">
